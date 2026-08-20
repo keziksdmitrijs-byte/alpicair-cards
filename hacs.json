@@ -1,0 +1,7 @@
+{
+  "name": "AlpicAir Climate Cards",
+  "render_readme": true,
+  "filename": "alpicair-cards.js",
+  "hide_default_branch": true,
+  "homeassistant": "2024.4.0"
+}

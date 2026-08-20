@@ -1,0 +1,17 @@
+{
+  "name": "alpicair-cards",
+  "version": "1.0.0",
+  "description": "AlpicAir climate custom cards for Home Assistant (recuperator, air conditioner, heat pump)",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/index.js --bundle --minify --format=esm --target=es2020 --outfile=dist/alpicair-cards.js",
+    "dev": "esbuild src/index.js --bundle --format=esm --target=es2020 --outfile=dist/alpicair-cards.js --watch"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  },
+  "dependencies": {
+    "lit": "^3.2.1"
+  },
+  "license": "MIT"
+}
