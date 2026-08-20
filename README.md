@@ -134,3 +134,29 @@ npm run dev       # watch
 ## Лицензия
 
 MIT
+
+## Interface settings card (global)
+
+```yaml
+type: custom:alpicair-ui-settings-card
+```
+
+Changes language, theme (light/dark/auto), accent color and compact mode for **all**
+AlpicAir cards at once. The choice is stored in the browser (localStorage) and applied
+instantly to every card on every dashboard view.
+
+## Heat pump entities
+
+Floor and boiler temperatures use plain sensors + writable numbers (no climate entity):
+
+```yaml
+type: custom:alpicair-heat-pump-card
+floor_current_entity: sensor.heat_pump_floor_temperature
+floor_target_entity: number.heat_pump_floor_setpoint
+water_current_entity: sensor.heat_pump_boiler_temperature
+water_target_entity: number.heat_pump_boiler_setpoint
+mode_entity: select.heat_pump_mode
+option_heating: Отопление
+option_hot_water: Горячая вода
+option_heating_water: Отопление + вода
+```

@@ -1,4 +1,5 @@
 const en = {
+  ui_settings: "Interface settings", language: "Language", theme: "Theme", light: "Light", dark: "Dark", accent_color: "Accent color", compact: "Compact mode", reset: "Reset", applies_to_all: "Applies to all AlpicAir cards in this browser", current: "Current", target: "Target", boiler: "Boiler",
   recuperator: "Recuperator", air_conditioner: "Air conditioner", heat_pump: "Heat pump",
   sensors: "Temperatures", device_settings: "Device settings", settings: "Settings",
   recuperation: "Recuperation", fan_speed: "Fan speed", supply: "Supply", exhaust: "Exhaust",
@@ -19,6 +20,7 @@ const en = {
 };
 
 const ru = {
+  ui_settings: "Настройки интерфейса", language: "Язык", theme: "Тема", light: "Светлая", dark: "Тёмная", accent_color: "Акцентный цвет", compact: "Компактный режим", reset: "Сбросить", applies_to_all: "Применяется ко всем карточкам AlpicAir в этом браузере", current: "Сейчас", target: "Задано", boiler: "Бойлер",
   recuperator: "Рекуператор", air_conditioner: "Кондиционер", heat_pump: "Тепловой насос",
   sensors: "Температуры", device_settings: "Настройки устройства", settings: "Настройки",
   recuperation: "Рекуперация", fan_speed: "Скорость вентилятора", supply: "Приток", exhaust: "Вытяжка",
@@ -39,6 +41,7 @@ const ru = {
 };
 
 const lv = {
+  ui_settings: "Saskarnes iestatījumi", language: "Valoda", theme: "Tēma", light: "Gaišā", dark: "Tumšā", accent_color: "Akcenta krāsa", compact: "Kompaktais režīms", reset: "Atiestatīt", applies_to_all: "Attiecas uz visām AlpicAir kartēm šajā pārlūkā", current: "Pašlaik", target: "Uzstādīts", boiler: "Boileris",
   recuperator: "Rekuperators", air_conditioner: "Kondicionieris", heat_pump: "Siltumsūknis",
   sensors: "Temperatūras", device_settings: "Ierīces iestatījumi", settings: "Iestatījumi",
   recuperation: "Rekuperācija", fan_speed: "Ventilatora ātrums", supply: "Pieplūde", exhaust: "Nosūce",
@@ -60,10 +63,18 @@ const lv = {
 
 const DICTS = { en, ru, lv };
 
+import { getUiSettings } from "./ui-settings.js";
+
 export function localize(hass, config, key) {
-  const lang = (config && config.language && config.language !== "auto")
-    ? config.language
-    : (hass && hass.language ? hass.language.split("-")[0] : "en");
+  const global = getUiSettings().language;
+  const lang =
+    config && config.language && config.language !== "auto"
+      ? config.language
+      : global && global !== "auto"
+        ? global
+        : hass && hass.language
+          ? hass.language.split("-")[0]
+          : "en";
   const dict = DICTS[lang] || en;
   return dict[key] ?? en[key] ?? key;
 }

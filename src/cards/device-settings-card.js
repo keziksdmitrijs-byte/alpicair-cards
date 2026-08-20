@@ -1,5 +1,6 @@
 import { LitElement, html, nothing } from "lit";
 import { cardStyles } from "../styles.js";
+import { UiSettingsMixin } from "../ui-settings.js";
 import { localize } from "../localize.js";
 import "../editors/device-settings-editor.js";
 
@@ -17,7 +18,7 @@ const FAN_GROUPS = [
   { id: "boost", supply: "boost_supply_entity", exhaust: "boost_exhaust_entity" },
 ];
 
-export class AlpicairDeviceSettingsCard extends LitElement {
+export class AlpicairDeviceSettingsCard extends UiSettingsMixin(LitElement) {
   static properties = { hass: {}, _config: { state: true } };
   static styles = cardStyles;
 

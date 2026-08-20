@@ -1,17 +1,32 @@
 import { LitElement, html, nothing } from "lit";
 import { cardStyles } from "../styles.js";
+import { UiSettingsMixin } from "../ui-settings.js";
 import { localize } from "../localize.js";
 import { performAction } from "../actions.js";
 import "../editors/recuperator-editor.js";
 
 const MODES = [
-  { id: "building_protection", icon: "mdi:shield-check", cfg: "show_building_protection" },
-  { id: "economy", icon: "mdi:leaf", cfg: "show_economy" },
-  { id: "comfort", icon: "mdi:sofa", cfg: "show_comfort" },
-  { id: "boost", icon: "mdi:rocket-launch", cfg: "show_boost", tone: "boost" },
+  {
+    id: "building_protection",
+    icon: "mdi:shield-check",
+    cfg: "show_building_protection",
+    // keywords used to auto-match the real option name of the entity
+    kw: ["building", "protect", "защит", "здан", "aizsardz", "ēkas", "ekas"],
+  },
+  { id: "economy", icon: "mdi:leaf", cfg: "show_economy", kw: ["eco", "econom", "эконом", "ekonom"] },
+  { id: "comfort", icon: "mdi:sofa", cfg: "show_comfort", kw: ["comfort", "normal", "комфорт", "нормал", "normāl", "normal"] },
+  {
+    id: "boost",
+    icon: "mdi:rocket-launch",
+    cfg: "show_boost",
+    tone: "boost",
+    kw: ["boost", "intens", "интенс", "турбо", "turbo", "max", "макс", "обдув"],
+  },
 ];
 
-export class AlpicairRecuperatorCard extends LitElement {
+const norm = (v) => String(v ?? "").trim().toLowerCase();
+
+export class AlpicairRecuperatorCard extends UiSettingsMixin(LitElement) {
   static properties = { hass: {}, _config: { state: true } };
   static styles = cardStyles;
 
@@ -50,9 +65,51 @@ export class AlpicairRecuperatorCard extends LitElement {
     return Number.isFinite(v) ? v : null;
   }
 
+  get _stateObj() {
+    return (this._config.mode_entity && this.hass.states[this._config.mode_entity]) || null;
+  }
+
+  /** Raw option list exposed by the entity (select / input_select / fan / climate). */
+  get _options() {
+    const st = this._stateObj;
+    if (!st) return [];
+    const a = st.attributes || {};
+    return a.options || a.preset_modes || a.hvac_modes || [];
+  }
+
+  /** Current raw state of the mode entity. */
   get _mode() {
-    const st = this._config.mode_entity && this.hass.states[this._config.mode_entity];
+    const st = this._stateObj;
     return st ? st.state : null;
+  }
+
+  /**
+   * Resolve a logical mode id (building_protection / economy / comfort / boost)
+   * to the real option string of the entity.
+   * Priority: explicit config override -> keyword match -> positional fallback.
+   */
+  _optionFor(id) {
+    const override = this._config[`option_${id}`];
+    if (override) return override;
+
+    const options = this._options;
+    if (!options.length) return id;
+
+    const def = MODES.find((m) => m.id === id);
+    if (def) {
+      const hit = options.find((o) => def.kw.some((k) => norm(o).includes(k)));
+      if (hit) return hit;
+    }
+
+    // positional fallback: the 4 modes usually come in this exact order
+    const idx = MODES.findIndex((m) => m.id === id);
+    return options[idx] ?? id;
+  }
+
+  _isActive(id) {
+    const cur = norm(this._mode);
+    if (!cur) return false;
+    return cur === norm(this._optionFor(id)) || cur === id;
   }
 
   get _on() {
@@ -63,16 +120,17 @@ export class AlpicairRecuperatorCard extends LitElement {
     return this._mode && this._mode !== "off";
   }
 
-  _setMode(mode) {
+  _setMode(id) {
     const ent = this._config.mode_entity;
     if (!ent) return;
+    const option = this._optionFor(id);
     const domain = ent.split(".")[0];
     if (domain === "select" || domain === "input_select") {
-      this.hass.callService(domain, "select_option", { entity_id: ent, option: mode });
+      this.hass.callService(domain, "select_option", { entity_id: ent, option });
     } else if (domain === "fan") {
-      this.hass.callService("fan", "set_preset_mode", { entity_id: ent, preset_mode: mode });
+      this.hass.callService("fan", "set_preset_mode", { entity_id: ent, preset_mode: option });
     } else if (domain === "climate") {
-      this.hass.callService("climate", "set_preset_mode", { entity_id: ent, preset_mode: mode });
+      this.hass.callService("climate", "set_preset_mode", { entity_id: ent, preset_mode: option });
     }
   }
 
@@ -112,6 +170,7 @@ export class AlpicairRecuperatorCard extends LitElement {
     if (!this.hass || !this._config) return nothing;
     const on = this._on;
     const mode = this._mode;
+    const activeId = MODES.find((m) => this._isActive(m.id))?.id || null;
     const recup = this._num(this._config.recuperation_entity);
     const speed = this._num(this._config.fan_speed_entity);
     const modes = MODES.filter((m) => this._config[m.cfg] !== false);
@@ -123,7 +182,7 @@ export class AlpicairRecuperatorCard extends LitElement {
           <div class="titles">
             <div class="title">${this._config.name || this._t("recuperator")}</div>
             <div class="subtitle">
-              ${on ? `${this._t("running")}${mode ? ` · ${this._t(mode)}` : ""}` : this._t("standby")}
+              ${on ? `${this._t("running")}${mode ? ` · ${activeId ? this._t(activeId) : mode}` : ""}` : this._t("standby")}
             </div>
           </div>
           ${this._config.show_power
@@ -136,13 +195,13 @@ export class AlpicairRecuperatorCard extends LitElement {
           ? this._bar(this._t("recuperation"), on ? recup : 0, "perf")
           : nothing}
         ${this._config.show_fan_speed && speed !== null
-          ? this._bar(this._t("fan_speed"), on ? speed : 0, mode === "boost" ? "boost" : "")
+          ? this._bar(this._t("fan_speed"), on ? speed : 0, activeId === "boost" ? "boost" : "")
           : nothing}
 
         ${modes.length
           ? html`<div class="grid c2">
               ${modes.map((m) => html`
-                <button class="mode ${mode === m.id ? "active" : ""} ${m.tone || ""}"
+                <button class="mode ${this._isActive(m.id) ? "active" : ""} ${m.tone || ""}"
                   @click=${() => this._setMode(m.id)}>
                   <ha-icon icon=${m.icon} style="--mdc-icon-size:18px"></ha-icon>${this._t(m.id)}
                 </button>`)}

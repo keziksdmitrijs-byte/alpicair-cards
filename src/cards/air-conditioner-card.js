@@ -1,5 +1,6 @@
 import { LitElement, html, svg, nothing } from "lit";
 import { cardStyles } from "../styles.js";
+import { UiSettingsMixin } from "../ui-settings.js";
 import { localize } from "../localize.js";
 import { fireEvent } from "../actions.js";
 import "../editors/air-conditioner-editor.js";
@@ -32,7 +33,7 @@ function arcPath(from, to, r = 78) {
   return `M ${a.x} ${a.y} A ${r} ${r} 0 ${to - from > 180 ? 1 : 0} 1 ${b.x} ${b.y}`;
 }
 
-export class AlpicairAirConditionerCard extends LitElement {
+export class AlpicairAirConditionerCard extends UiSettingsMixin(LitElement) {
   static properties = { hass: {}, _config: { state: true }, _pending: { state: true } };
   static styles = cardStyles;
 

@@ -3,6 +3,7 @@ import "./cards/air-conditioner-card.js";
 import "./cards/heat-pump-card.js";
 import "./cards/sensors-card.js";
 import "./cards/device-settings-card.js";
+import "./cards/ui-settings-card.js";
 
 const VERSION = "1.0.0";
 
@@ -26,6 +27,9 @@ register("alpicair-sensors-card", "AlpicAir Temperatures Card",
   "Outdoor/indoor/supply/extract temperatures with target slider.");
 register("alpicair-device-settings-card", "AlpicAir Device Settings Card",
   "Night cooling, fan speed presets and device date & time.");
+
+register("alpicair-ui-settings-card", "AlpicAir Interface Settings Card",
+  "Global language, theme and accent for all AlpicAir cards.");
 
 console.info(
   `%c ALPICAIR-CARDS %c v${VERSION} `,

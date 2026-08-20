@@ -1,9 +1,10 @@
 import { LitElement, html, nothing } from "lit";
 import { cardStyles } from "../styles.js";
+import { UiSettingsMixin } from "../ui-settings.js";
 import { localize } from "../localize.js";
 import "../editors/sensors-editor.js";
 
-export class AlpicairSensorsCard extends LitElement {
+export class AlpicairSensorsCard extends UiSettingsMixin(LitElement) {
   static properties = { hass: {}, _config: { state: true }, _pending: { state: true } };
   static styles = cardStyles;
 

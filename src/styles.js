@@ -87,4 +87,39 @@ export const cardStyles = css`
   .stepper button { width: 32px; height: 32px; border-radius: 8px; border: none; cursor: pointer;
     background: var(--secondary-background-color); color: var(--primary-text-color); font-size: 18px; }
   .stepper .v { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  :host([alp-theme="dark"]) ha-card {
+    background: #1b1c20; color: #f2f3f5;
+    --primary-text-color: #f2f3f5;
+    --secondary-text-color: #a4a8b0;
+    --secondary-background-color: #26282e;
+    --divider-color: #34363d;
+    --card-background-color: #1b1c20;
+  }
+  :host([alp-theme="light"]) ha-card {
+    background: #ffffff; color: #16181d;
+    --primary-text-color: #16181d;
+    --secondary-text-color: #626873;
+    --secondary-background-color: #f2f4f7;
+    --divider-color: #e2e5ea;
+    --card-background-color: #ffffff;
+  }
+  :host([alp-compact]) ha-card { padding: 10px; gap: 8px; }
+  :host([alp-compact]) button.mode, :host([alp-compact]) button.plain { min-height: 38px; font-size: 12px; }
+  .hero { display: flex; align-items: stretch; gap: 12px;
+    border: 1px solid var(--divider-color); border-radius: 16px;
+    background: var(--secondary-background-color); padding: 14px 10px; }
+  .hero-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .hero-sep { width: 1px; background: var(--divider-color); }
+  .hero-label { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .05em; color: var(--secondary-text-color); }
+  .hero-current { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--secondary-text-color); }
+  .hero-target { font-size: 34px; font-weight: 800; line-height: 1.05; font-variant-numeric: tabular-nums; }
+  .hero-current.heat, .hero-target.heat { color: var(--alp-heat, #f4511e); }
+  .hero-current.water, .hero-target.water { color: var(--alp-water, #039be5); }
+  .swatches { display: flex; flex-wrap: wrap; gap: 10px; }
+  .swatch { width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+    border: 2px solid var(--divider-color); background: var(--secondary-background-color);
+    display: grid; place-items: center; color: var(--secondary-text-color); }
+  .swatch.active { box-shadow: 0 0 0 3px rgba(var(--rgb-primary-color, 3,169,244), .35); border-color: transparent; }
 `;
