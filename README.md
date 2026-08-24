@@ -160,3 +160,22 @@ option_heating: Отопление
 option_hot_water: Горячая вода
 option_heating_water: Отопление + вода
 ```
+
+## Sizes (buttons & fonts)
+
+Every card supports two options, editable in the visual editor:
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `button_scale` | `1` | Button height, padding, icon and control size multiplier (0.8 – 2) |
+| `font_scale` | `1` | Text size multiplier for all labels and values (0.8 – 2) |
+
+```yaml
+type: custom:alpicair-heat-pump-card
+button_scale: 1.4
+font_scale: 1.2
+```
+
+The **Interface settings** card (`custom:alpicair-ui-settings-card`) has
+*Button size* and *Font size* sliders that apply to **all** AlpicAir cards in
+this browser. A per-card `button_scale` / `font_scale` overrides the global value.

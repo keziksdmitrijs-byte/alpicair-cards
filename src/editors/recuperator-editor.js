@@ -1,7 +1,8 @@
-import { BaseCardEditor, boolRow, entityField, languageField } from "./base-editor.js";
+import { BaseCardEditor, boolRow, entityField, languageField, sizeFields } from "./base-editor.js";
 
 class RecuperatorEditor extends BaseCardEditor {
   _labels = {
+    button_scale: "Button size (1 = default)", font_scale: "Font size (1 = default)",
     name: "Name", icon: "Icon", language: "Language",
     mode_entity: "Mode entity (select / fan / climate)",
     power_entity: "Power entity (switch / fan)",
@@ -80,6 +81,7 @@ class RecuperatorEditor extends BaseCardEditor {
       { name: "hold_time", selector: { number: { min: 200, max: 2000, step: 50, mode: "box", unit_of_measurement: "ms" } } },
       { name: "tap_action", selector: { ui_action: {} } },
       { name: "hold_action", selector: { ui_action: {} } },
+      sizeFields,
     ];
   }
 }

@@ -6,7 +6,7 @@
 const KEY = "alpicair-ui-settings";
 const EVT = "alpicair-ui-settings-changed";
 
-const DEFAULTS = { language: "auto", theme: "auto", accent: "", compact: false };
+const DEFAULTS = { language: "auto", theme: "auto", accent: "", compact: false, buttonScale: 1, fontScale: 1 };
 
 let cache = null;
 
@@ -74,6 +74,12 @@ export const UiSettingsMixin = (Base) =>
       super.disconnectedCallback();
     }
 
+    willUpdate(changed) {
+      if (super.willUpdate) super.willUpdate(changed);
+      // re-apply so per-card size overrides take effect right after setConfig()
+      if (this.isConnected) this._applyUiSettings();
+    }
+
     _applyUiSettings() {
       const s = this._uiSettings || getUiSettings();
       const dark = s.theme === "dark" || (s.theme === "auto" && prefersDark());
@@ -81,6 +87,12 @@ export const UiSettingsMixin = (Base) =>
       else this.setAttribute("alp-theme", dark ? "dark" : "light");
       if (s.compact) this.setAttribute("alp-compact", "");
       else this.removeAttribute("alp-compact");
+      // Sizes: per-card config wins over the global UI settings card.
+      const cfg = this._config || {};
+      const bs = Number(cfg.button_scale ?? s.buttonScale ?? 1) || 1;
+      const fs = Number(cfg.font_scale ?? s.fontScale ?? 1) || 1;
+      this.style.setProperty("--alp-bs", String(bs));
+      this.style.setProperty("--alp-fs", String(fs));
       if (s.accent) {
         this.style.setProperty("--alp-accent", s.accent);
         this.style.setProperty("--primary-color", s.accent);

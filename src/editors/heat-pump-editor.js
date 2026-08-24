@@ -1,7 +1,8 @@
-import { BaseCardEditor, boolRow, entityField, languageField } from "./base-editor.js";
+import { BaseCardEditor, boolRow, entityField, languageField, sizeFields } from "./base-editor.js";
 
 class HeatPumpEditor extends BaseCardEditor {
   _labels = {
+    button_scale: "Button size (1 = default)", font_scale: "Font size (1 = default)",
     name: "Name", icon: "Icon", language: "Language",
     power_entity: "Power entity",
     floor_current_entity: "Floor temperature sensor",
@@ -68,6 +69,7 @@ class HeatPumpEditor extends BaseCardEditor {
         "show_power", "show_hero", "show_floor", "show_water", "show_modes",
         "show_quick_heat", "show_quiet_mode", "show_disinfection",
       ]),
+      sizeFields,
     ];
   }
 }

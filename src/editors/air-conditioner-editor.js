@@ -1,4 +1,4 @@
-import { BaseCardEditor, boolRow, entityField, languageField } from "./base-editor.js";
+import { BaseCardEditor, boolRow, entityField, languageField, sizeFields } from "./base-editor.js";
 
 class AirConditionerEditor extends BaseCardEditor {
   get schema() {
@@ -16,6 +16,7 @@ class AirConditionerEditor extends BaseCardEditor {
         "show_power", "show_dial", "show_modes", "show_current_temperature",
         "show_fan", "show_swing_vertical", "show_swing_horizontal",
       ]),
+      sizeFields,
     ];
   }
 }

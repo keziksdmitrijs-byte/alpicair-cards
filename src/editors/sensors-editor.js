@@ -1,7 +1,8 @@
-import { BaseCardEditor, boolRow, entityField, languageField } from "./base-editor.js";
+import { BaseCardEditor, boolRow, entityField, languageField, sizeFields } from "./base-editor.js";
 
 class SensorsEditor extends BaseCardEditor {
   _labels = {
+    button_scale: "Button size (1 = default)", font_scale: "Font size (1 = default)",
     name: "Name", icon: "Icon", language: "Language",
     outdoor_entity: "Outdoor temperature",
     indoor_entity: "Indoor temperature",
@@ -32,6 +33,7 @@ class SensorsEditor extends BaseCardEditor {
         { name: "max_temp", selector: { number: { min: 0, max: 60, step: 1, mode: "box" } } },
         { name: "step", selector: { number: { min: 0.1, max: 5, step: 0.1, mode: "box" } } },
       ] },
+      sizeFields,
     ];
   }
 }

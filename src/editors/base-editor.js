@@ -32,6 +32,8 @@ export class BaseCardEditor extends LitElement {
     show_swing_horizontal: "Horizontal swing selector",
     show_current_temperature: "Current temperature",
     default_hvac_mode: "HVAC mode on power on",
+    button_scale: "Button size (1 = default)",
+    font_scale: "Font size (1 = default)",
   };
 
   computeLabel = (s) => this._labels[s.name] || s.label || s.name;
@@ -73,4 +75,13 @@ export const languageField = {
     { value: "ru", label: "Русский" },
     { value: "lv", label: "Latviešu" },
   ] } },
+};
+
+export const sizeFields = {
+  type: "grid",
+  name: "",
+  schema: [
+    { name: "button_scale", selector: { number: { min: 0.8, max: 2, step: 0.05, mode: "slider" } } },
+    { name: "font_scale", selector: { number: { min: 0.8, max: 2, step: 0.05, mode: "slider" } } },
+  ],
 };

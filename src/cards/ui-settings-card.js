@@ -30,6 +30,7 @@ export class AlpicairUiSettingsCard extends UiSettingsMixin(LitElement) {
       show_theme: true,
       show_accent: true,
       show_compact: true,
+      show_sizes: true,
       show_reset: true,
       ...config,
     };
@@ -111,6 +112,31 @@ export class AlpicairUiSettingsCard extends UiSettingsMixin(LitElement) {
           ? html`<button class="mode ${s.compact ? "active" : ""}" @click=${() => this._set({ compact: !s.compact })}>
               <ha-icon icon="mdi:arrow-collapse-vertical" style="--mdc-icon-size:18px"></ha-icon>${this._t("compact")}
             </button>`
+          : nothing}
+
+        ${c.show_sizes !== false
+          ? html`
+              <div>
+                <div class="section-title" style="margin-bottom:8px">${this._t("button_size")}</div>
+                <div class="slider-row">
+                  <div class="bar-top">
+                    <span>${this._t("button_size")}</span>
+                    <span class="val">${Math.round((s.buttonScale ?? 1) * 100)}%</span>
+                  </div>
+                  <input type="range" min="0.8" max="2" step="0.05"
+                    .value=${String(s.buttonScale ?? 1)}
+                    aria-label=${this._t("button_size")}
+                    @input=${(e) => this._set({ buttonScale: Number(e.target.value) })} />
+                  <div class="bar-top" style="margin-top:6px">
+                    <span>${this._t("font_size")}</span>
+                    <span class="val">${Math.round((s.fontScale ?? 1) * 100)}%</span>
+                  </div>
+                  <input type="range" min="0.8" max="2" step="0.05"
+                    .value=${String(s.fontScale ?? 1)}
+                    aria-label=${this._t("font_size")}
+                    @input=${(e) => this._set({ fontScale: Number(e.target.value) })} />
+                </div>
+              </div>`
           : nothing}
 
         ${c.show_reset !== false

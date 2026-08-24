@@ -1,7 +1,8 @@
-import { BaseCardEditor, boolRow, entityField, languageField } from "./base-editor.js";
+import { BaseCardEditor, boolRow, entityField, languageField, sizeFields } from "./base-editor.js";
 
 class DeviceSettingsEditor extends BaseCardEditor {
   _labels = {
+    button_scale: "Button size (1 = default)", font_scale: "Font size (1 = default)",
     name: "Name", icon: "Icon", language: "Language",
     show_night_cooling: "Section: night cooling",
     show_fan_speeds: "Section: fan speeds",
@@ -57,6 +58,7 @@ class DeviceSettingsEditor extends BaseCardEditor {
         entityField("date_entity", ["date", "input_datetime"]),
         entityField("time_entity", ["time", "input_datetime"]),
       ] },
+      sizeFields,
     ];
   }
 }
