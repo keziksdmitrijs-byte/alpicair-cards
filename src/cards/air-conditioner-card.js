@@ -27,7 +27,7 @@ function polar(cx, cy, r, deg) {
   const rad = ((deg - 90) * Math.PI) / 180;
   return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
 }
-function arcPath(from, to, r = 78) {
+function arcPath(from, to, r = 80) {
   const a = polar(100, 100, r, from);
   const b = polar(100, 100, r, to);
   return `M ${a.x} ${a.y} A ${r} ${r} 0 ${to - from > 180 ? 1 : 0} 1 ${b.x} ${b.y}`;
@@ -108,7 +108,7 @@ export class AlpicairAirConditionerCard extends UiSettingsMixin(LitElement) {
     const target = this._pending ?? a.temperature ?? min;
     const pct = Math.min(1, Math.max(0, (target - min) / (max - min)));
     const angle = START + pct * SWEEP;
-    const knob = polar(100, 100, 78, angle);
+    const knob = polar(100, 100, 80, angle);
     const modes = (a.hvac_modes || []).filter((m) => m !== "off");
     const cols = Math.min(5, Math.max(2, modes.length));
 
@@ -131,9 +131,9 @@ export class AlpicairAirConditionerCard extends UiSettingsMixin(LitElement) {
           ? html`
             <div class="dial-wrap">
               <svg viewBox="0 0 200 200">
-                ${svg`<path d=${arcPath(START, START + SWEEP)} fill="none" stroke="var(--secondary-background-color)" stroke-width="14" stroke-linecap="round" />`}
-                ${on ? svg`<path d=${arcPath(START, angle)} fill="none" stroke="var(--primary-color)" stroke-width="14" stroke-linecap="round" />` : nothing}
-                ${svg`<circle cx=${knob.x} cy=${knob.y} r="9" fill="var(--card-background-color)" stroke=${on ? "var(--primary-color)" : "var(--disabled-text-color)"} stroke-width="2" />`}
+                ${svg`<path d=${arcPath(START, START + SWEEP)} fill="none" stroke="var(--secondary-background-color)" stroke-width="9" stroke-linecap="round" />`}
+                ${on ? svg`<path d=${arcPath(START, angle)} fill="none" stroke="var(--primary-color)" stroke-width="9" stroke-linecap="round" />` : nothing}
+                ${svg`<circle cx=${knob.x} cy=${knob.y} r="13" fill="var(--card-background-color)" stroke=${on ? "var(--primary-color)" : "var(--disabled-text-color)"} stroke-width="3" />`}
               </svg>
               <div class="dial-center">
                 <div class="mode-label">${on ? this._modeLabel(st.state) : this._t("off")}</div>
