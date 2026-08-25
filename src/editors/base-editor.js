@@ -26,6 +26,7 @@ export class BaseCardEditor extends LitElement {
     language: "Language",
     show_power: "Power button",
     show_dial: "Temperature dial",
+    show_temp_slider: "Target temperature slider",
     show_modes: "Mode buttons",
     show_fan: "Fan speed selector",
     show_swing_vertical: "Vertical swing selector",

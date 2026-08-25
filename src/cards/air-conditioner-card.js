@@ -56,6 +56,7 @@ export class AlpicairAirConditionerCard extends UiSettingsMixin(LitElement) {
       show_swing_vertical: true,
       show_swing_horizontal: true,
       show_current_temperature: true,
+      show_temp_slider: true,
       dial_size: 260,
       language: "auto",
       ...config,
@@ -183,9 +184,11 @@ export class AlpicairAirConditionerCard extends UiSettingsMixin(LitElement) {
                   : nothing}
               </div>
             </div>
-            <input type="range" min=${min} max=${max} step=${step} .value=${String(target)}
-              aria-label=${this._t("target_temperature")}
-              @input=${(e) => this._setTemp(Number(e.target.value))} ?disabled=${!on} />`
+            ${this._config.show_temp_slider === false
+              ? nothing
+              : html`<input type="range" min=${min} max=${max} step=${step} .value=${String(target)}
+                  aria-label=${this._t("target_temperature")}
+                  @input=${(e) => this._setTemp(Number(e.target.value))} ?disabled=${!on} />`}`
           : nothing}
 
         ${this._config.show_modes && modes.length
