@@ -56,6 +56,7 @@ export class AlpicairAirConditionerCard extends UiSettingsMixin(LitElement) {
       show_swing_vertical: true,
       show_swing_horizontal: true,
       show_current_temperature: true,
+      dial_size: 260,
       language: "auto",
       ...config,
     };
@@ -80,6 +81,43 @@ export class AlpicairAirConditionerCard extends UiSettingsMixin(LitElement) {
       this._call("set_temperature", { temperature: value });
       this._pending = undefined;
     }, 400);
+  }
+
+  _commitTemp() {
+    clearTimeout(this._debounce);
+    if (this._pending == null) return;
+    const value = this._pending;
+    this._pending = undefined;
+    this._call("set_temperature", { temperature: value });
+  }
+
+  _dialDrag(ev, min, max, step) {
+    const st = this._stateObj;
+    if (!st || st.state === "off" || st.state === "unavailable") return;
+    ev.preventDefault();
+    const rect = ev.currentTarget.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const move = (e) => {
+      let deg = (Math.atan2(e.clientX - cx, cy - e.clientY) * 180) / Math.PI;
+      if (deg < 0) deg += 360;
+      let rel = deg - START;
+      if (rel < 0) rel += 360;
+      if (rel > SWEEP) rel = rel - SWEEP > (360 - SWEEP) / 2 ? 0 : SWEEP;
+      const raw = min + (rel / SWEEP) * (max - min);
+      const val = Math.min(max, Math.max(min, Math.round(raw / step) * step));
+      this._pending = Number(val.toFixed(2));
+    };
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
+      this._commitTemp();
+    };
+    move(ev);
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
   }
 
   _togglePower() {
@@ -129,8 +167,10 @@ export class AlpicairAirConditionerCard extends UiSettingsMixin(LitElement) {
 
         ${this._config.show_dial
           ? html`
-            <div class="dial-wrap">
-              <svg viewBox="0 0 200 200">
+            <div class="dial-wrap" style=${`max-width:${this._config.dial_size || 260}px`}>
+              <svg viewBox="0 0 200 200" class="dial ${on ? "interactive" : ""}"
+                @pointerdown=${(e) => this._dialDrag(e, min, max, step)}>
+                ${svg`<path d=${arcPath(START, START + SWEEP)} fill="none" stroke="transparent" stroke-width="34" stroke-linecap="round" />`}
                 ${svg`<path d=${arcPath(START, START + SWEEP)} fill="none" stroke="var(--secondary-background-color)" stroke-width="9" stroke-linecap="round" />`}
                 ${on ? svg`<path d=${arcPath(START, angle)} fill="none" stroke="var(--primary-color)" stroke-width="9" stroke-linecap="round" />` : nothing}
                 ${svg`<circle cx=${knob.x} cy=${knob.y} r="13" fill="var(--card-background-color)" stroke=${on ? "var(--primary-color)" : "var(--disabled-text-color)"} stroke-width="3" />`}

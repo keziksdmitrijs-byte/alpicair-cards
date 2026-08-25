@@ -16,6 +16,7 @@ class AirConditionerEditor extends BaseCardEditor {
         "show_power", "show_dial", "show_modes", "show_current_temperature",
         "show_fan", "show_swing_vertical", "show_swing_horizontal",
       ]),
+      { name: "dial_size", selector: { number: { min: 160, max: 480, step: 10, mode: "slider" } } },
       sizeFields,
     ];
   }

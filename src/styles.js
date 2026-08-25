@@ -92,7 +92,8 @@ export const cardStyles = css`
   input[type="range"].water::-webkit-slider-thumb { background: var(--alp-water, #039be5); }
   input[type="range"].water::-moz-range-thumb { background: var(--alp-water, #039be5); }
   .dial-wrap { position: relative; margin: 0 auto; max-width: 260px; width: 100%; }
-  .dial-wrap svg { width: 100%; display: block; }
+  .dial-wrap svg { width: 100%; display: block; touch-action: none; }
+  .dial-wrap svg.interactive { cursor: pointer; }
   .dial-center {
     position: absolute; inset: 0; display: flex; flex-direction: column;
     align-items: center; justify-content: center; pointer-events: none;

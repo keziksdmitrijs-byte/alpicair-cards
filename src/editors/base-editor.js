@@ -34,6 +34,7 @@ export class BaseCardEditor extends LitElement {
     default_hvac_mode: "HVAC mode on power on",
     button_scale: "Button size (1 = default)",
     font_scale: "Font size (1 = default)",
+    dial_size: "Dial size, px",
   };
 
   computeLabel = (s) => this._labels[s.name] || s.label || s.name;
