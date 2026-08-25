@@ -22,6 +22,12 @@ class DeviceSettingsEditor extends BaseCardEditor {
     comfort_exhaust_entity: "Comfort · exhaust",
     boost_supply_entity: "Boost · supply",
     boost_exhaust_entity: "Boost · exhaust",
+    show_back_button: "Back button",
+    back_icon: "Back button icon",
+    back_entity: "Back button target entity",
+    hold_time: "Long press duration (ms)",
+    back_tap_action: "Back · short press action",
+    back_hold_action: "Back · long press action",
     date_entity: "Date entity",
     time_entity: "Time entity",
   };
@@ -58,6 +64,14 @@ class DeviceSettingsEditor extends BaseCardEditor {
         entityField("date_entity", ["date", "input_datetime"]),
         entityField("time_entity", ["time", "input_datetime"]),
       ] },
+      boolRow(["show_back_button"]),
+      { type: "grid", name: "", schema: [
+        { name: "back_icon", selector: { icon: {} } },
+        entityField("back_entity"),
+      ] },
+      { name: "hold_time", selector: { number: { min: 200, max: 2000, step: 50, mode: "box", unit_of_measurement: "ms" } } },
+      { name: "back_tap_action", selector: { ui_action: {} } },
+      { name: "back_hold_action", selector: { ui_action: {} } },
       sizeFields,
     ];
   }

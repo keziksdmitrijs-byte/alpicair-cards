@@ -1,7 +1,7 @@
 const en = {
   ui_settings: "Interface settings", language: "Language", theme: "Theme", light: "Light", dark: "Dark", accent_color: "Accent color", button_size: "Button size", font_size: "Font size", compact: "Compact mode", reset: "Reset", applies_to_all: "Applies to all AlpicAir cards in this browser", current: "Current", target: "Target", boiler: "Boiler",
   recuperator: "Recuperator", air_conditioner: "Air conditioner", heat_pump: "Heat pump",
-  sensors: "Temperatures", device_settings: "Device settings", settings: "Settings",
+  sensors: "Temperatures", device_settings: "Device settings", settings: "Settings", back: "Back",
   recuperation: "Recuperation", fan_speed: "Fan speed", supply: "Supply", exhaust: "Exhaust",
   off: "Off", on: "On", building_protection: "Building protection", economy: "Economy",
   comfort: "Comfort", boost: "Boost", outdoor: "Outdoor", indoor: "Indoor",
@@ -22,7 +22,7 @@ const en = {
 const ru = {
   ui_settings: "Настройки интерфейса", language: "Язык", theme: "Тема", light: "Светлая", dark: "Тёмная", accent_color: "Акцентный цвет", button_size: "Размер кнопок", font_size: "Размер шрифта", compact: "Компактный режим", reset: "Сбросить", applies_to_all: "Применяется ко всем карточкам AlpicAir в этом браузере", current: "Сейчас", target: "Задано", boiler: "Бойлер",
   recuperator: "Рекуператор", air_conditioner: "Кондиционер", heat_pump: "Тепловой насос",
-  sensors: "Температуры", device_settings: "Настройки устройства", settings: "Настройки",
+  sensors: "Температуры", device_settings: "Настройки устройства", settings: "Настройки", back: "Назад",
   recuperation: "Рекуперация", fan_speed: "Скорость вентилятора", supply: "Приток", exhaust: "Вытяжка",
   off: "Выкл", on: "Вкл", building_protection: "Защита здания", economy: "Экономичный",
   comfort: "Комфорт", boost: "Boost", outdoor: "Улица", indoor: "В доме",
@@ -43,7 +43,7 @@ const ru = {
 const lv = {
   ui_settings: "Saskarnes iestatījumi", language: "Valoda", theme: "Tēma", light: "Gaišā", dark: "Tumšā", accent_color: "Akcenta krāsa", button_size: "Pogu izmērs", font_size: "Fonta izmērs", compact: "Kompaktais režīms", reset: "Atiestatīt", applies_to_all: "Attiecas uz visām AlpicAir kartēm šajā pārlūkā", current: "Pašlaik", target: "Uzstādīts", boiler: "Boileris",
   recuperator: "Rekuperators", air_conditioner: "Kondicionieris", heat_pump: "Siltumsūknis",
-  sensors: "Temperatūras", device_settings: "Ierīces iestatījumi", settings: "Iestatījumi",
+  sensors: "Temperatūras", device_settings: "Ierīces iestatījumi", settings: "Iestatījumi", back: "Atpakaļ",
   recuperation: "Rekuperācija", fan_speed: "Ventilatora ātrums", supply: "Pieplūde", exhaust: "Nosūce",
   off: "Izslēgts", on: "Ieslēgts", building_protection: "Ēkas aizsardzība", economy: "Ekonomiskais",
   comfort: "Normālais", boost: "Boost", outdoor: "Ārā", indoor: "Iekštelpās",

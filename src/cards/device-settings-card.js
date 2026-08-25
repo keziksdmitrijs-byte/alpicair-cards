@@ -2,6 +2,7 @@ import { LitElement, html, nothing } from "lit";
 import { cardStyles } from "../styles.js";
 import { UiSettingsMixin } from "../ui-settings.js";
 import { localize } from "../localize.js";
+import { performAction, pressHandlers } from "../actions.js";
 import "../editors/device-settings-editor.js";
 
 const NC_FIELDS = [
@@ -30,6 +31,11 @@ export class AlpicairDeviceSettingsCard extends UiSettingsMixin(LitElement) {
       show_night_cooling: true,
       show_fan_speeds: true,
       show_date_time: true,
+      show_back_button: true,
+      back_icon: "mdi:chevron-left",
+      hold_time: 500,
+      back_tap_action: { action: "none" },
+      back_hold_action: { action: "none" },
       language: "auto",
       ...config,
     };
@@ -48,6 +54,23 @@ export class AlpicairDeviceSettingsCard extends UiSettingsMixin(LitElement) {
     this.hass.callService(domain, "set_value", { entity_id: entity, [domain === "input_datetime" ? "time" : "value"]: value });
   }
 
+  _backButton() {
+    const c = this._config;
+    if (c.show_back_button === false) return nothing;
+    const target = c.back_entity;
+    const h = pressHandlers(
+      () => performAction(this, this.hass, target, c.back_tap_action),
+      () => performAction(this, this.hass, target, c.back_hold_action),
+      Number(c.hold_time) || 500,
+    );
+    return html`<button class="power" aria-label=${this._t("back")}
+      @pointerdown=${h["@pointerdown"]} @pointerup=${h["@pointerup"]}
+      @pointerleave=${h["@pointerleave"]} @pointercancel=${h["@pointercancel"]}
+      @contextmenu=${h["@contextmenu"]}>
+      <ha-icon icon=${c.back_icon || "mdi:chevron-left"}></ha-icon>
+    </button>`;
+  }
+
   render() {
     if (!this.hass || !this._config) return nothing;
     return html`
@@ -57,6 +80,7 @@ export class AlpicairDeviceSettingsCard extends UiSettingsMixin(LitElement) {
           <div class="titles">
             <div class="title">${this._config.name || this._t("device_settings")}</div>
           </div>
+          ${this._backButton()}
         </div>
 
         ${this._config.show_night_cooling ? this._nightCooling() : nothing}

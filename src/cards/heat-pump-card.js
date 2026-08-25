@@ -181,8 +181,7 @@ export class AlpicairHeatPumpCard extends UiSettingsMixin(LitElement) {
         ${i > 0 ? html`<div class="hero-sep"></div>` : nothing}
         <div class="hero-col">
           <div class="hero-label"><ha-icon icon=${s.icon} style="--mdc-icon-size:18px"></ha-icon>${s.label}</div>
-          <div class="hero-current ${s.tone}">${s.current != null ? `${s.current.toFixed(1)}°` : "—"}</div>
-          <div class="hero-target ${s.tone}">${s.target != null ? `${s.target.toFixed(1)}°` : "—"}</div>
+          <div class="hero-current big ${s.tone}">${s.current != null ? `${s.current.toFixed(1)}°` : "—"}</div>
         </div>`)}
     </div>`;
   }
@@ -197,7 +196,6 @@ export class AlpicairHeatPumpCard extends UiSettingsMixin(LitElement) {
       <div class="tempstep">
         <span class="lbl" style="display:flex;align-items:center;gap:6px">
           <ha-icon icon=${s.icon} style="--mdc-icon-size:18px"></ha-icon>${s.label}
-          ${s.current != null ? html`<span class="sub">· ${s.current.toFixed(1)}°</span>` : nothing}
         </span>
         <button class="stepbtn" aria-label="−"
           @click=${() => this._setTarget(s.targetId, clamp(val - st))}>−</button>

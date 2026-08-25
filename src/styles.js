@@ -190,4 +190,7 @@ export const cardStyles = css`
   .range-legend { display: flex; justify-content: space-between; font-size: calc(12px * var(--alp-fs, 1));
     font-weight: 700; color: var(--secondary-text-color); }
   .metric-grid.stacked { grid-template-columns: 1fr; }
+  .metric-grid.horiz { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
+  .metric-grid.horiz .metric { text-align: center; padding: 10px 8px; }
+  .hero-current.big { font-size: calc(40px * var(--alp-fs, 1)); font-weight: 800; line-height: 1.05; }
 `;

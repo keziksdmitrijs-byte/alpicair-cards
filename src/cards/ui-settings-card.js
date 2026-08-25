@@ -2,6 +2,7 @@ import { LitElement, html, nothing } from "lit";
 import { cardStyles } from "../styles.js";
 import { localize } from "../localize.js";
 import { UiSettingsMixin, getUiSettings, setUiSettings, resetUiSettings } from "../ui-settings.js";
+import { performAction, pressHandlers } from "../actions.js";
 import "../editors/ui-settings-editor.js";
 
 const LANGS = [
@@ -32,12 +33,33 @@ export class AlpicairUiSettingsCard extends UiSettingsMixin(LitElement) {
       show_compact: true,
       show_sizes: true,
       show_reset: true,
+      show_back_button: true,
+      back_icon: "mdi:chevron-left",
+      hold_time: 500,
+      back_tap_action: { action: "none" },
+      back_hold_action: { action: "none" },
       ...config,
     };
   }
 
   getCardSize() { return 4; }
   _t(k) { return localize(this.hass, { language: "auto" }, k); }
+
+  _backButton() {
+    const c = this._config;
+    if (c.show_back_button === false) return nothing;
+    const h = pressHandlers(
+      () => performAction(this, this.hass, c.back_entity, c.back_tap_action),
+      () => performAction(this, this.hass, c.back_entity, c.back_hold_action),
+      Number(c.hold_time) || 500,
+    );
+    return html`<button class="power" aria-label=${this._t("back")}
+      @pointerdown=${h["@pointerdown"]} @pointerup=${h["@pointerup"]}
+      @pointerleave=${h["@pointerleave"]} @pointercancel=${h["@pointercancel"]}
+      @contextmenu=${h["@contextmenu"]}>
+      <ha-icon icon=${c.back_icon || "mdi:chevron-left"}></ha-icon>
+    </button>`;
+  }
 
   _set(patch) {
     setUiSettings(patch);
@@ -57,6 +79,7 @@ export class AlpicairUiSettingsCard extends UiSettingsMixin(LitElement) {
             <div class="title">${c.name || this._t("ui_settings")}</div>
             <div class="subtitle">${this._t("applies_to_all")}</div>
           </div>
+          ${this._backButton()}
         </div>
 
         ${c.show_language !== false

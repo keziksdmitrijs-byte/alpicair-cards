@@ -67,7 +67,7 @@ export class AlpicairSensorsCard extends UiSettingsMixin(LitElement) {
           </div>
         </div>
 
-        <div class="metric-grid stacked">
+        <div class="metric-grid horiz">
           ${this._metric(c.outdoor_entity, this._t("outdoor"))}
           ${this._metric(c.indoor_entity, this._t("indoor"))}
           ${this._metric(c.supply_entity, this._t("supply_air"))}
