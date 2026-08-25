@@ -30,6 +30,7 @@ export function setUiSettings(patch) {
     /* ignore quota / private mode */
   }
   window.dispatchEvent(new CustomEvent(EVT, { detail: cache }));
+  document.dispatchEvent(new CustomEvent(EVT, { detail: cache }));
 }
 
 export function resetUiSettings() {
@@ -40,6 +41,7 @@ export function resetUiSettings() {
     /* ignore */
   }
   window.dispatchEvent(new CustomEvent(EVT, { detail: cache }));
+  document.dispatchEvent(new CustomEvent(EVT, { detail: cache }));
 }
 
 function hexToRgb(hex) {
@@ -59,34 +61,49 @@ export const UiSettingsMixin = (Base) =>
   class extends Base {
     connectedCallback() {
       super.connectedCallback();
-      this._uiSettings = getUiSettings();
-      this._onUiSettings = (ev) => {
-        this._uiSettings = ev.detail;
+      this._onUiSettings = () => {
+        cache = null; // always re-read (covers other tabs / other card instances)
         this._applyUiSettings();
         this.requestUpdate();
       };
       window.addEventListener(EVT, this._onUiSettings);
+      document.addEventListener(EVT, this._onUiSettings);
+      window.addEventListener("storage", this._onStorage = (e) => {
+        if (!e.key || e.key === KEY) this._onUiSettings();
+      });
       this._applyUiSettings();
     }
 
     disconnectedCallback() {
       window.removeEventListener(EVT, this._onUiSettings);
+      document.removeEventListener(EVT, this._onUiSettings);
+      window.removeEventListener("storage", this._onStorage);
       super.disconnectedCallback();
     }
 
     willUpdate(changed) {
       if (super.willUpdate) super.willUpdate(changed);
-      // re-apply so per-card size overrides take effect right after setConfig()
       if (this.isConnected) this._applyUiSettings();
     }
 
     _applyUiSettings() {
-      const s = this._uiSettings || getUiSettings();
+      const s = getUiSettings();
+      this._uiSettings = s;
       const dark = s.theme === "dark" || (s.theme === "auto" && prefersDark());
       if (s.theme === "auto") this.removeAttribute("alp-theme");
       else this.setAttribute("alp-theme", dark ? "dark" : "light");
       if (s.compact) this.setAttribute("alp-compact", "");
       else this.removeAttribute("alp-compact");
+
+      if (s.theme === "auto") {
+        this.style.removeProperty("--ha-card-background");
+        this.style.removeProperty("--card-background-color");
+      } else {
+        const bg = dark ? "#1b1c20" : "#ffffff";
+        this.style.setProperty("--ha-card-background", bg);
+        this.style.setProperty("--card-background-color", bg);
+      }
+
       // Sizes: per-card config wins over the global UI settings card.
       const cfg = this._config || {};
       const bs = Number(cfg.button_scale ?? s.buttonScale ?? 1) || 1;

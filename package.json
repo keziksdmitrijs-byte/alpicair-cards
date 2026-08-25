@@ -1,6 +1,6 @@
 {
   "name": "alpicair-cards",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "AlpicAir climate custom cards for Home Assistant (recuperator, air conditioner, heat pump)",
   "type": "module",
   "scripts": {

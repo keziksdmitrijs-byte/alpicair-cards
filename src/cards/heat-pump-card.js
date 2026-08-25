@@ -158,7 +158,7 @@ export class AlpicairHeatPumpCard extends UiSettingsMixin(LitElement) {
 
         <div class="${on ? "" : "dimmed"}" style="display:flex;flex-direction:column;gap:14px;">
           ${c.show_hero !== false && shown.length ? this._hero(shown) : nothing}
-          ${shown.filter((s) => s.targetId).map((s) => this._slider(s))}
+          ${shown.filter((s) => s.targetId).map((s) => this._stepRow(s))}
 
           ${c.show_modes && c.mode_entity
             ? html`<div class="grid c3">
@@ -187,24 +187,23 @@ export class AlpicairHeatPumpCard extends UiSettingsMixin(LitElement) {
     </div>`;
   }
 
-  _slider(s) {
+  _stepRow(s) {
     const { min, max, step } = s.limits;
-    const val = s.target ?? min;
+    const st = Number(step) || 0.5;
+    const val = s.target ?? Number(min);
+    const dec = st < 1 ? 1 : 0;
+    const clamp = (v) => Math.min(Number(max), Math.max(Number(min), Math.round(v * 10) / 10));
     return html`
-      <div class="slider-row">
-        <div class="bar-top">
-          <span style="display:flex;align-items:center;gap:6px">
-            <ha-icon icon=${s.icon} style="--mdc-icon-size:16px"></ha-icon>${s.label}
-          </span>
-          <span class="val">
-            ${Number(val).toFixed(step < 1 ? 1 : 0)} °C
-            ${s.current != null
-              ? html`<span style="color:var(--secondary-text-color)"> / ${s.current.toFixed(1)} °C</span>`
-              : nothing}
-          </span>
-        </div>
-        <input type="range" min=${min} max=${max} step=${step} .value=${String(val)}
-          aria-label=${s.label} @input=${(e) => this._setTarget(s.targetId, Number(e.target.value))} />
+      <div class="tempstep">
+        <span class="lbl" style="display:flex;align-items:center;gap:6px">
+          <ha-icon icon=${s.icon} style="--mdc-icon-size:18px"></ha-icon>${s.label}
+          ${s.current != null ? html`<span class="sub">· ${s.current.toFixed(1)}°</span>` : nothing}
+        </span>
+        <button class="stepbtn" aria-label="−"
+          @click=${() => this._setTarget(s.targetId, clamp(val - st))}>−</button>
+        <span class="v ${s.tone}">${Number(val).toFixed(dec)}°</span>
+        <button class="stepbtn" aria-label="+"
+          @click=${() => this._setTarget(s.targetId, clamp(val + st))}>+</button>
       </div>`;
   }
 

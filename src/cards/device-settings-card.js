@@ -71,46 +71,53 @@ export class AlpicairDeviceSettingsCard extends UiSettingsMixin(LitElement) {
     const stopEnt = this._st(this._config.nc_stop_time_entity);
     const toggle = this._st(this._config.night_cooling_entity);
     if (!rows.length && !startEnt && !stopEnt && !toggle) return nothing;
+    const on = !toggle || toggle.state === "on";
 
     return html`
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div class="section-title">${this._t("night_cooling")}</div>
-        ${toggle
-          ? html`<div class="select-row">
-              <span class="lbl">${this._t("night_cooling")}</span>
-              <ha-switch .checked=${toggle.state === "on"}
-                @change=${() => this.hass.callService("homeassistant", "toggle", { entity_id: this._config.night_cooling_entity })}></ha-switch>
+      ${toggle
+        ? html`<div class="select-row">
+            <ha-icon icon="mdi:weather-night" style="--mdc-icon-size:20px;color:var(--primary-color)"></ha-icon>
+            <span class="lbl">${this._t("night_cooling")}</span>
+            <ha-switch .checked=${toggle.state === "on"}
+              @change=${() => this.hass.callService("homeassistant", "toggle", { entity_id: this._config.night_cooling_entity })}></ha-switch>
+          </div>`
+        : nothing}
+
+      <div class="panel ${on ? "" : "dimmed"}">
+        <div class="section-title">${this._t("night_cooling_schedule") || this._t("night_cooling")}</div>
+        ${startEnt || stopEnt
+          ? html`<div class="grid c2">
+              ${startEnt ? this._timeField(this._t("start_time"), this._config.nc_start_time_entity, startEnt) : nothing}
+              ${stopEnt ? this._timeField(this._t("stop_time"), this._config.nc_stop_time_entity, stopEnt) : nothing}
             </div>`
           : nothing}
-        <div class="grid c2">
-          ${startEnt ? this._timeInput(this._t("start_time"), this._config.nc_start_time_entity, startEnt) : nothing}
-          ${stopEnt ? this._timeInput(this._t("stop_time"), this._config.nc_stop_time_entity, stopEnt) : nothing}
-        </div>
         ${rows.map((f) => {
           const st = this._st(this._config[f.cfg]);
-          const step = Number(st.attributes.step) || 0.1;
+          const step = Number(st.attributes.step) || 0.5;
+          const min = Number(st.attributes.min ?? f.min);
+          const max = Number(st.attributes.max ?? f.max);
           const val = Number(st.state);
+          const clamp = (v) => Math.min(max, Math.max(min, Math.round(v * 10) / 10));
           return html`
-            <div class="bar-wrap">
-              <div class="bar-top"><span>${this._t(f.key)}</span><span class="val">${val.toFixed(1)} °C</span></div>
-              <div class="stepper">
-                <button @click=${() => this._setNumber(this._config[f.cfg], +(val - step).toFixed(1))}>−</button>
-                <span class="v">${val.toFixed(1)} °C</span>
-                <button @click=${() => this._setNumber(this._config[f.cfg], +(val + step).toFixed(1))}>+</button>
-              </div>
+            <div class="tempstep">
+              <span class="lbl">${this._t(f.key)}</span>
+              <span class="v heat">${val.toFixed(1)}°</span>
+              <button class="stepbtn" aria-label="−"
+                @click=${() => this._setNumber(this._config[f.cfg], clamp(val - step))}>−</button>
+              <button class="stepbtn" aria-label="+"
+                @click=${() => this._setNumber(this._config[f.cfg], clamp(val + step))}>+</button>
             </div>`;
         })}
       </div>`;
   }
 
-  _timeInput(label, entity, st) {
-    const value = (st.attributes.timestamp != null && st.state.length > 5) ? st.state.slice(0, 5) : st.state;
+  _timeField(label, entity, st) {
+    const value = (st.state || "").slice(0, 5);
     return html`
-      <div class="slider-row">
-        <div class="section-title">${label}</div>
+      <div class="field">
+        <span class="flabel"><ha-icon icon="mdi:clock-outline" style="--mdc-icon-size:14px"></ha-icon>${label}</span>
         <input type="time" .value=${value}
-          @change=${(e) => this._setTime(entity, `${e.target.value}:00`)}
-          style="width:100%;padding:9px 10px;border-radius:12px;border:1px solid var(--divider-color);background:var(--secondary-background-color);color:var(--primary-text-color)" />
+          @change=${(e) => this._setTime(entity, `${e.target.value}:00`)} />
       </div>`;
   }
 
@@ -118,15 +125,12 @@ export class AlpicairDeviceSettingsCard extends UiSettingsMixin(LitElement) {
     const groups = FAN_GROUPS.filter((g) => this._st(this._config[g.supply]) || this._st(this._config[g.exhaust]));
     if (!groups.length) return nothing;
     return html`
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <div class="section-title">${this._t("fan_speed")}</div>
-        ${groups.map((g) => html`
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <div style="font-size:13px;font-weight:700">${this._t(g.id)}</div>
-            ${this._speedSlider(this._config[g.supply], this._t("supply"))}
-            ${this._speedSlider(this._config[g.exhaust], this._t("exhaust"))}
-          </div>`)}
-      </div>`;
+      ${groups.map((g) => html`
+        <div class="panel">
+          <div class="section-title">${this._t(g.id)}</div>
+          ${this._speedSlider(this._config[g.supply], this._t("supply"))}
+          ${this._speedSlider(this._config[g.exhaust], this._t("exhaust"))}
+        </div>`)}`;
   }
 
   _speedSlider(entity, label) {
@@ -149,25 +153,22 @@ export class AlpicairDeviceSettingsCard extends UiSettingsMixin(LitElement) {
     const timeSt = this._st(this._config.time_entity);
     if (!dateSt && !timeSt) return nothing;
     return html`
-      <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="panel">
         <div class="section-title">${this._t("date_time")}</div>
         <div class="grid c2">
           ${dateSt
-            ? html`<div class="slider-row">
-                <div class="section-title">${this._t("date")}</div>
-                <input type="date" .value=${dateSt.state}
+            ? html`<div class="field">
+                <span class="flabel"><ha-icon icon="mdi:calendar" style="--mdc-icon-size:14px"></ha-icon>${this._t("date")}</span>
+                <input type="date" .value=${(dateSt.state || "").slice(0, 10)}
                   @change=${(e) => this.hass.callService(this._config.date_entity.split(".")[0], "set_value",
-                    { entity_id: this._config.date_entity, date: e.target.value })}
-                  style="width:100%;padding:9px 10px;border-radius:12px;border:1px solid var(--divider-color);background:var(--secondary-background-color);color:var(--primary-text-color)" />
+                    { entity_id: this._config.date_entity, date: e.target.value })} />
               </div>`
             : nothing}
-          ${timeSt ? this._timeInput(this._t("time"), this._config.time_entity, timeSt) : nothing}
+          ${timeSt ? this._timeField(this._t("time"), this._config.time_entity, timeSt) : nothing}
         </div>
-        ${this._config.sync_action_entity || (dateSt && timeSt)
-          ? html`<button class="plain" style="width:100%" @click=${this._syncNow}>
-              <ha-icon icon="mdi:clock-check" style="--mdc-icon-size:18px"></ha-icon>${this._t("sync_time")}
-            </button>`
-          : nothing}
+        <button class="plain" style="width:100%;flex-direction:row" @click=${this._syncNow}>
+          <ha-icon icon="mdi:clock-check" style="--mdc-icon-size:18px"></ha-icon>${this._t("sync_time")}
+        </button>
       </div>`;
   }
 
