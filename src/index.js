@@ -1,4 +1,5 @@
 import "./cards/recuperator-card.js";
+import "./cards/recuperator-panel-card.js";
 import "./cards/air-conditioner-card.js";
 import "./cards/heat-pump-card.js";
 import "./cards/sensors-card.js";
@@ -19,6 +20,8 @@ const register = (type, name, description) => {
 
 register("alpicair-recuperator-card", "AlpicAir Recuperator Card",
   "Recuperator control: modes, efficiency, fan speed and a configurable settings button.");
+register("alpicair-recuperator-panel-card", "AlpicAir Recuperator Panel Card",
+  "Square recuperator panel: fan-speed ring, mode picker and temperature tiles.");
 register("alpicair-air-conditioner-card", "AlpicAir Air Conditioner Card",
   "Single climate entity: dial, HVAC modes, fan and swing control.");
 register("alpicair-heat-pump-card", "AlpicAir Heat Pump Card",

@@ -194,4 +194,40 @@ export const cardStyles = css`
   .metric-grid.horiz { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
   .metric-grid.horiz .metric { text-align: center; padding: 10px 8px; }
   .hero-current.big { font-size: calc(40px * var(--alp-fs, 1)); font-weight: 800; line-height: 1.05; }
+
+  /* --- recuperator panel (ring) --- */
+  .panel-card { align-items: center; }
+  .ring-wrap { position: relative; display: grid; place-items: center; }
+  .ring { display: block; }
+  .ring-center {
+    position: absolute; inset: 0; margin: auto;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    border-radius: 50%; border: 2px solid var(--divider-color);
+    background: var(--secondary-background-color); cursor: pointer;
+    transition: transform .12s;
+  }
+  .ring-center:active { transform: scale(.97); }
+  .ring-center .rc-mode { font-size: calc(15px * var(--alp-fs, 1)); font-weight: 800; line-height: 1.1; padding: 0 8px; text-align: center; }
+  .ring-center .rc-pct { font-size: calc(13px * var(--alp-fs, 1)); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--secondary-text-color); }
+  .ring-overlay {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    border-radius: 50%; background: var(--ha-card-background, var(--card-background-color, rgba(0,0,0,.82)));
+    backdrop-filter: blur(4px);
+  }
+  .ring-overlay-grid { display: grid; gap: 6px; width: 78%; }
+  .ring-stats { width: 100%; margin-top: 14px; }
+  .ring-stat {
+    border-radius: 12px; background: var(--secondary-background-color);
+    border: 1px solid transparent; padding: calc(8px * var(--alp-bs, 1)) 6px;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    cursor: pointer; text-align: center; transition: background .18s;
+  }
+  button.ring-stat { cursor: pointer; }
+  .ring-stat.sel { background: rgba(var(--rgb-primary-color, 3,169,244), .16); border-color: var(--primary-color); }
+  .ring-stat.sel.heat { background: rgba(244,81,30,.16); border-color: var(--alp-heat, #f4511e); }
+  .ring-stat .rs-val { font-size: calc(17px * var(--alp-fs, 1)); font-weight: 800; font-variant-numeric: tabular-nums; }
+  .ring-stepper { display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    width: 100%; background: var(--secondary-background-color); border-radius: 12px; padding: 6px 12px; margin-top: 8px; }
+  .ring-stepper .rs-target { font-size: calc(22px * var(--alp-fs, 1)); font-weight: 800; font-variant-numeric: tabular-nums; color: var(--alp-heat, #f4511e); }
+  .ring-mini { width: 100%; margin-top: 8px; }
 `;
