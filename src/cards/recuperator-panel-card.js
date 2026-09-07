@@ -2,7 +2,7 @@ import { LitElement, html, svg, nothing } from "lit";
 import { cardStyles } from "../styles.js";
 import { UiSettingsMixin } from "../ui-settings.js";
 import { localize } from "../localize.js";
-import { performAction } from "../actions.js";
+import { PanelMixin, panelHeader, ringOverlay } from "../panel.js";
 import "../editors/recuperator-panel-editor.js";
 
 const MODES = [
@@ -13,10 +13,9 @@ const MODES = [
 ];
 
 const norm = (v) => String(v ?? "").trim().toLowerCase();
-
 const SPEED_BY_MODE = { building_protection: 15, economy: 35, comfort: 55, boost: 100 };
 
-export class AlpicairRecuperatorPanelCard extends UiSettingsMixin(LitElement) {
+export class AlpicairRecuperatorPanelCard extends PanelMixin(UiSettingsMixin(LitElement)) {
   static properties = {
     hass: {},
     _config: { state: true },
@@ -37,6 +36,7 @@ export class AlpicairRecuperatorPanelCard extends UiSettingsMixin(LitElement) {
     this._config = {
       ring_size: 260,
       ring_thickness: 18,
+      show_header: true,
       show_target: true,
       show_indoor: true,
       show_recuperation: true,
@@ -99,12 +99,20 @@ export class AlpicairRecuperatorPanelCard extends UiSettingsMixin(LitElement) {
   }
   get _recup() { return this._num(this._config.recuperation_entity) ?? 0; }
 
-  get _on() {
+  get _panelOn() {
     if (this._config.power_entity) {
       const st = this.hass.states[this._config.power_entity];
       return st ? !["off", "unavailable", "unknown"].includes(st.state) : false;
     }
-    return this._mode && this._mode !== "off";
+    return !!this._mode && this._mode !== "off";
+  }
+  _togglePower() {
+    const ent = this._config.power_entity;
+    if (ent) {
+      this.hass.callService("homeassistant", "toggle", { entity_id: ent });
+    } else if (this._config.mode_entity) {
+      this._setMode(this._panelOn ? "off" : (this._config.default_mode || "comfort"));
+    }
   }
 
   _setMode(id) {
@@ -122,7 +130,6 @@ export class AlpicairRecuperatorPanelCard extends UiSettingsMixin(LitElement) {
     this._open = false;
   }
 
-  // target temperature via number / input_number / climate
   get _target() {
     const e = this._config.target_entity;
     if (!e) return null;
@@ -142,6 +149,9 @@ export class AlpicairRecuperatorPanelCard extends UiSettingsMixin(LitElement) {
     }
   }
 
+  get _hasOpenPanel() { return this._open || this._editingTarget || this._showTemps; }
+  _closePanels() { this._open = false; this._editingTarget = false; this._showTemps = false; }
+
   render() {
     if (!this.hass || !this._config) return nothing;
     const size = Number(this._config.ring_size) || 260;
@@ -156,8 +166,10 @@ export class AlpicairRecuperatorPanelCard extends UiSettingsMixin(LitElement) {
 
     return html`
       <ha-card class="panel-card">
+        ${this._config.show_header !== false ? panelHeader(this) : nothing}
+
         <div class="ring-wrap" style=${`width:${size}px;height:${size}px`}>
-          <svg width=${size} height=${size} class="ring" style=${`transform:rotate(-90deg)`}>
+          <svg width=${size} height=${size} class="ring" style="transform:rotate(-90deg)">
             ${svg`<circle cx=${size / 2} cy=${size / 2} r=${r} fill="none"
               stroke="var(--secondary-background-color)" stroke-width=${thickness} stroke-linecap="round" />`}
             ${svg`<circle cx=${size / 2} cy=${size / 2} r=${r} fill="none"
@@ -173,15 +185,14 @@ export class AlpicairRecuperatorPanelCard extends UiSettingsMixin(LitElement) {
           </button>
 
           ${this._open && this._config.show_mode_picker
-            ? html`<div class="ring-overlay">
+            ? ringOverlay(this, () => this._open = false, html`
                 <div class="ring-overlay-grid">
                   ${MODES.map((m) => html`
                     <button class="mode ${this._isActive(m.id) ? "active" : ""} ${m.tone || ""}"
                       @click=${() => this._setMode(m.id)}>
                       <ha-icon icon=${m.icon} style="--mdc-icon-size:18px"></ha-icon>${this._t(m.id)}
                     </button>`)}
-                </div>
-              </div>`
+                </div>`)
             : nothing}
         </div>
 

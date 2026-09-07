@@ -1,0 +1,79 @@
+import { BaseCardEditor, boolRow, entityField, languageField, sizeFields } from "./base-editor.js";
+
+class HeatPumpPanelEditor extends BaseCardEditor {
+  _labels = {
+    button_scale: "Button size (1 = default)", font_scale: "Font size (1 = default)",
+    name: "Name", icon: "Icon", language: "Language",
+    power_entity: "Power entity",
+    floor_current_entity: "Floor temperature sensor",
+    floor_target_entity: "Floor target (number / input_number)",
+    water_current_entity: "Boiler temperature sensor",
+    water_target_entity: "Boiler target (number / input_number)",
+    mode_entity: "Mode entity (select)",
+    option_heating: "Option: heating",
+    option_hot_water: "Option: hot water",
+    option_heating_water: "Option: heating + water",
+    quick_heat_entity: "Quick heat entity (switch)",
+    quiet_mode_entity: "Quiet mode entity (switch)",
+    disinfection_entity: "Disinfection entity (switch)",
+    ring_size: "Ring size (px)",
+    ring_thickness: "Ring thickness (px)",
+    back_path: "Back navigation path (e.g. /lovelace/home)",
+    back_action: "Back button action",
+    show_power: "Show header (back + power)",
+    show_mode: "Show mode tile",
+    show_extras: "Show quick modes tile",
+    show_current_temperature: "Show current temperature",
+  };
+
+  get _options() {
+    const st = this._config && this.hass && this.hass.states[this._config.mode_entity];
+    return (st && st.attributes && st.attributes.options) || [];
+  }
+  _optionField(name) {
+    const options = this._options;
+    return options.length
+      ? { name, selector: { select: { mode: "dropdown", options } } }
+      : { name, selector: { text: {} } };
+  }
+
+  get schema() {
+    return [
+      { type: "grid", name: "", schema: [
+        { name: "name", selector: { text: {} } },
+        { name: "icon", selector: { icon: {} } },
+      ] },
+      languageField,
+      entityField("power_entity", ["switch", "input_boolean", "climate"]),
+      { type: "grid", name: "", schema: [
+        entityField("floor_current_entity", ["sensor", "number", "input_number"]),
+        entityField("floor_target_entity", ["number", "input_number", "climate"]),
+      ] },
+      { type: "grid", name: "", schema: [
+        entityField("water_current_entity", ["sensor", "number", "input_number"]),
+        entityField("water_target_entity", ["number", "input_number", "water_heater", "climate"]),
+      ] },
+      entityField("mode_entity", ["select", "input_select", "climate"]),
+      { type: "grid", name: "", schema: [
+        this._optionField("option_heating"),
+        this._optionField("option_hot_water"),
+        this._optionField("option_heating_water"),
+      ] },
+      { type: "grid", name: "", schema: [
+        entityField("quick_heat_entity", ["switch", "input_boolean", "script"]),
+        entityField("quiet_mode_entity", ["switch", "input_boolean"]),
+        entityField("disinfection_entity", ["switch", "input_boolean", "script"]),
+      ] },
+      { type: "grid", name: "", schema: [
+        { name: "ring_size", selector: { number: { min: 140, max: 480, step: 10, mode: "slider", unit_of_measurement: "px" } } },
+        { name: "ring_thickness", selector: { number: { min: 6, max: 40, step: 1, mode: "slider", unit_of_measurement: "px" } } },
+      ] },
+      { name: "back_path", selector: { text: {} } },
+      { name: "back_action", selector: { ui_action: {} } },
+      boolRow(["show_power", "show_mode", "show_extras", "show_current_temperature"]),
+      sizeFields,
+    ];
+  }
+}
+
+customElements.define("alpicair-heat-pump-panel-card-editor", HeatPumpPanelEditor);

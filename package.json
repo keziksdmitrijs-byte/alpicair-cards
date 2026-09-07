@@ -1,7 +1,7 @@
 {
   "name": "alpicair-cards",
-  "version": "1.1.0",
-  "description": "AlpicAir climate custom cards for Home Assistant (recuperator, recuperator panel, air conditioner, heat pump)",
+  "version": "1.2.0",
+  "description": "AlpicAir climate custom cards for Home Assistant (recuperator, recuperator panel, AC/ventilation panel, heat pump, heat pump panel, air conditioner, sensors)",
   "type": "module",
   "scripts": {
     "build": "esbuild src/index.js --bundle --minify --format=esm --target=es2020 --outfile=dist/alpicair-cards.js",

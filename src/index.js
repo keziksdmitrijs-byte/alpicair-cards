@@ -1,12 +1,14 @@
 import "./cards/recuperator-card.js";
 import "./cards/recuperator-panel-card.js";
+import "./cards/ac-panel-card.js";
+import "./cards/heat-pump-panel-card.js";
 import "./cards/air-conditioner-card.js";
 import "./cards/heat-pump-card.js";
 import "./cards/sensors-card.js";
 import "./cards/device-settings-card.js";
 import "./cards/ui-settings-card.js";
 
-const VERSION = "1.0.0";
+const VERSION = "1.2.0";
 
 window.customCards = window.customCards || [];
 const register = (type, name, description) => {
@@ -21,7 +23,11 @@ const register = (type, name, description) => {
 register("alpicair-recuperator-card", "AlpicAir Recuperator Card",
   "Recuperator control: modes, efficiency, fan speed and a configurable settings button.");
 register("alpicair-recuperator-panel-card", "AlpicAir Recuperator Panel Card",
-  "Square recuperator panel: fan-speed ring, mode picker and temperature tiles.");
+  "Square recuperator panel: fan-speed ring, mode picker, back/power header and temperature tiles.");
+register("alpicair-ac-panel-card", "AlpicAir AC / Ventilation Panel Card",
+  "Square climate panel: target-temperature ring, HVAC modes, fan speed and vertical/horizontal swing.");
+register("alpicair-heat-pump-panel-card", "AlpicAir Heat Pump Panel Card",
+  "Square heat-pump panel: boiler-temperature ring, floor/boiler targets, modes and quick-action indicators.");
 register("alpicair-air-conditioner-card", "AlpicAir Air Conditioner Card",
   "Single climate entity: dial, HVAC modes, fan and swing control.");
 register("alpicair-heat-pump-card", "AlpicAir Heat Pump Card",

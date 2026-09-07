@@ -230,4 +230,115 @@ export const cardStyles = css`
     width: 100%; background: var(--secondary-background-color); border-radius: 12px; padding: 6px 12px; margin-top: 8px; }
   .ring-stepper .rs-target { font-size: calc(22px * var(--alp-fs, 1)); font-weight: 800; font-variant-numeric: tabular-nums; color: var(--alp-heat, #f4511e); }
   .ring-mini { width: 100%; margin-top: 8px; }
+
+  /* --- shared panel header (back + power) --- */
+  .panel-header {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; margin-bottom: 4px;
+  }
+  .ph-btn {
+    width: calc(40px * var(--alp-bs, 1)); height: calc(40px * var(--alp-bs, 1));
+    border-radius: 12px; border: 1px solid var(--divider-color);
+    background: var(--secondary-background-color); color: var(--secondary-text-color);
+    cursor: pointer; display: grid; place-items: center;
+    transition: background .18s, color .18s;
+  }
+  .ph-btn:hover { color: var(--primary-text-color); }
+  .ph-btn:active { transform: scale(.97); }
+  .ph-btn.power.on {
+    border-color: transparent;
+    background: rgba(var(--rgb-primary-color, 3,169,244), .18);
+    color: var(--primary-color);
+  }
+  .ph-btn ha-icon { --mdc-icon-size: calc(20px * var(--alp-bs, 1)) !important; }
+
+  /* --- ring center labels (AC / heat-pump panels) --- */
+  .ring-center .rc-cap {
+    font-size: calc(11px * var(--alp-fs, 1)); font-weight: 700; text-transform: uppercase;
+    letter-spacing: .04em; color: var(--secondary-text-color);
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .ring-center .rc-target {
+    font-size: calc(40px * var(--alp-fs, 1)); font-weight: 800; line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .ring-center .rc-sub {
+    font-size: calc(13px * var(--alp-fs, 1)); font-weight: 600; color: var(--secondary-text-color);
+    text-align: center; padding: 0 6px;
+  }
+
+  /* --- tiles below the ring --- */
+  .ring-tiles { width: 100%; margin-top: 14px; }
+  .tile {
+    min-height: calc(62px * var(--alp-bs, 1)); border-radius: 12px; cursor: pointer;
+    border: 1px solid transparent; background: var(--secondary-background-color);
+    color: var(--primary-text-color);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    padding: 8px 4px; text-align: center; transition: background .18s, border-color .18s;
+  }
+  .tile:active { transform: scale(.97); }
+  .tile.sel { background: rgba(var(--rgb-primary-color, 3,169,244), .16); border-color: var(--primary-color); }
+  .tile-icon { color: var(--secondary-text-color); display: grid; place-items: center; }
+  .tile.sel .tile-icon { color: var(--primary-color); }
+  .tile-val {
+    font-size: calc(13px * var(--alp-fs, 1)); font-weight: 800; line-height: 1.15;
+    min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .tile-dots { display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(128,128,128,.35);
+  }
+  .dot.active { background: var(--primary-color); }
+  .dot.boost { background: var(--alp-boost, #ff9800); }
+  .dot.perf { background: var(--alp-perf, #4caf50); }
+
+  /* --- option rows revealed by tiles --- */
+  .opt-row {
+    display: flex; flex-wrap: wrap; gap: 8px; width: 100%; margin-top: 8px;
+  }
+  .opt {
+    flex: 1 1 30%; min-height: calc(44px * var(--alp-bs, 1)); border-radius: 12px; cursor: pointer;
+    border: 2px solid var(--divider-color); background: var(--secondary-background-color);
+    color: var(--secondary-text-color); font-size: calc(13px * var(--alp-fs, 1)); font-weight: 700;
+    display: flex; align-items: center; justify-content: center; gap: 6px; padding: 6px 8px;
+    transition: background .18s, color .18s, border-color .18s;
+  }
+  .opt:hover { color: var(--primary-text-color); }
+  .opt.active {
+    border-color: transparent; color: var(--primary-color);
+    background: rgba(var(--rgb-primary-color, 3,169,244), .16);
+  }
+  .opt.active.boost { color: var(--alp-boost, #ff9800); background: rgba(255,152,0,.16); }
+  .opt.active.perf { color: var(--alp-perf, #4caf50); background: rgba(76,175,80,.16); }
+  .opt span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* --- target-temperature edit overlay (AC panel) --- */
+  .ring-temp-edit {
+    display: flex; align-items: center; gap: 14px;
+  }
+  .ring-temp-edit .rte-val {
+    font-size: calc(28px * var(--alp-fs, 1)); font-weight: 800; font-variant-numeric: tabular-nums;
+    color: var(--primary-color);
+  }
+  .stepbtn.round {
+    width: calc(44px * var(--alp-bs, 1)); height: calc(44px * var(--alp-bs, 1)); border-radius: 50%;
+  }
+
+  /* --- target rows (heat-pump panel) --- */
+  .ring-target-rows { width: 84%; display: flex; flex-direction: column; gap: 8px; }
+  .rt-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    background: var(--secondary-background-color); border-radius: 12px; padding: 6px 8px;
+  }
+  .rt-inner { display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; }
+  .rt-label {
+    font-size: calc(11px * var(--alp-fs, 1)); font-weight: 700; text-transform: uppercase;
+    letter-spacing: .04em; color: var(--secondary-text-color);
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .rt-val { font-size: calc(20px * var(--alp-fs, 1)); font-weight: 800; font-variant-numeric: tabular-nums; }
+
+  /* tap on the empty overlay backdrop closes the sheet */
+  .ring-overlay { cursor: pointer; }
 `;
