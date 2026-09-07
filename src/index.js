@@ -8,7 +8,7 @@ import "./cards/sensors-card.js";
 import "./cards/device-settings-card.js";
 import "./cards/ui-settings-card.js";
 
-const VERSION = "1.2.0";
+const VERSION = "1.2.1";
 
 window.customCards = window.customCards || [];
 const register = (type, name, description) => {

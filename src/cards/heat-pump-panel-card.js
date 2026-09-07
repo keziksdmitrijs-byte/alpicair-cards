@@ -2,7 +2,7 @@ import { LitElement, html, svg, nothing } from "lit";
 import { cardStyles } from "../styles.js";
 import { UiSettingsMixin } from "../ui-settings.js";
 import { localize } from "../localize.js";
-import { PanelMixin, panelHeader, ringOverlay } from "../panel.js";
+import { PanelMixin, panelBackdrop, panelHeader, ringOverlay } from "../panel.js";
 import "../editors/heat-pump-panel-editor.js";
 
 const MODES = [
@@ -122,7 +122,7 @@ export class AlpicairHeatPumpPanelCard extends PanelMixin(UiSettingsMixin(LitEle
   _toggleSheet(sheet) { this._sheet = this._sheet === sheet ? null : sheet; }
 
   get _waterNow() { return this._num(this._config.water_current_entity); }
-  get _waterLimits() { return this._limits(this._config.water_target_entity, { min: 30, max: 65, step: 1 }); }
+  get _waterLimits() { return this._limits(this._config.water_target_entity, { min: 20, max: 75, step: 1 }); }
   get _floorLimits() { return this._limits(this._config.floor_target_entity, { min: 15, max: 35, step: 0.5 }); }
 
   render() {
@@ -131,7 +131,7 @@ export class AlpicairHeatPumpPanelCard extends PanelMixin(UiSettingsMixin(LitEle
     const on = this._panelOn;
     const water = this._waterNow;
     const wl = this._waterLimits;
-    const pct = water != null ? Math.min(1, Math.max(0, (water - wl.min) / (wl.max - wl.min))) : 0;
+    const pct = water != null ? Math.min(1, Math.max(0, (water - 20) / (75 - 20))) : 0;
     const size = Number(c.ring_size) || 260;
     const thickness = Number(c.ring_thickness) || 18;
     const r = (size - thickness) / 2 - 2;
@@ -142,6 +142,7 @@ export class AlpicairHeatPumpPanelCard extends PanelMixin(UiSettingsMixin(LitEle
 
     return html`
       <ha-card class="panel-card">
+        ${this._sheet ? panelBackdrop(this) : nothing}
         ${(c.show_power !== false || c.back_path || c.back_action) ? panelHeader(this) : nothing}
 
         <div class="ring-wrap" style=${`width:${size}px;height:${size}px`}>
@@ -169,41 +170,45 @@ export class AlpicairHeatPumpPanelCard extends PanelMixin(UiSettingsMixin(LitEle
             : nothing}
         </div>
 
-        <div class="grid c2 ring-tiles">
-          ${c.show_mode && c.mode_entity
-            ? html`<button class="tile ${this._sheet === "mode" ? "sel" : ""}" @click=${() => this._toggleSheet("mode")}>
-                <span class="tile-icon"><ha-icon icon="mdi:tune" style="--mdc-icon-size:18px"></ha-icon></span>
-                <span class="tile-val">${activeMode ? this._t(activeMode.id) : this._t("settings")}</span>
-              </button>`
+        <div class="tilezone">
+          <div class="grid c2 ring-tiles ${this._sheet && this._sheet !== "temp" ? "dimmed" : ""}">
+            ${c.show_mode && c.mode_entity
+              ? html`<button class="tile ${this._sheet === "mode" ? "sel" : ""}" @click=${() => this._toggleSheet("mode")}>
+                  <span class="tile-icon"><ha-icon icon="mdi:tune" style="--mdc-icon-size:18px"></ha-icon></span>
+                  <span class="tile-val">${activeMode ? this._t(activeMode.id) : this._t("settings")}</span>
+                </button>`
+              : nothing}
+            ${c.show_extras && extras.length
+              ? html`<button class="tile ${this._sheet === "extra" ? "sel" : ""}" @click=${() => this._toggleSheet("extra")}>
+                  <span class="tile-icon"><ha-icon icon="mdi:flash" style="--mdc-icon-size:18px"></ha-icon></span>
+                  <span class="tile-val">${this._t("settings")}</span>
+                  <span class="tile-dots">
+                    ${extras.map((e) => html`<span class="dot ${this._isOn(c[e.entity]) ? (e.tone || "active") : ""}"></span>`)}
+                  </span>
+                </button>`
+              : nothing}
+          </div>
+
+          ${this._sheet === "mode"
+            ? html`<div class="opt-row floating">
+                ${MODES.map((m) => html`
+                  <button class="opt ${this._isMode(m.id) ? "active" : ""}" @click=${() => { this._setMode(m.id); this._sheet = null; }}>
+                    <ha-icon icon=${m.icon} style="--mdc-icon-size:18px"></ha-icon><span>${this._t(m.id)}</span>
+                  </button>`)}
+              </div>`
             : nothing}
-          ${c.show_extras && extras.length
-            ? html`<button class="tile ${this._sheet === "extra" ? "sel" : ""}" @click=${() => this._toggleSheet("extra")}>
-                <span class="tile-icon"><ha-icon icon="mdi:flash" style="--mdc-icon-size:18px"></ha-icon></span>
-                <span class="tile-val">${this._t("settings")}</span>
-                <span class="tile-dots">
-                  ${extras.map((e) => html`<span class="dot ${this._isOn(c[e.entity]) ? (e.tone || "active") : ""}"></span>`)}
-                </span>
-              </button>`
+
+          ${this._sheet === "extra"
+            ? html`<div class="opt-row floating">
+                ${extras.map((e) => html`
+                  <button class="opt ${this._isOn(c[e.entity]) ? `active ${e.tone || ""}` : ""}" @click=${() => { this._toggle(c[e.entity]); this._sheet = null; }}>
+                    <ha-icon icon=${e.icon} style="--mdc-icon-size:18px"></ha-icon><span>${this._t(e.id)}</span>
+                  </button>`)}
+              </div>`
             : nothing}
         </div>
 
-        ${this._sheet === "mode"
-          ? html`<div class="opt-row">
-              ${MODES.map((m) => html`
-                <button class="opt ${this._isMode(m.id) ? "active" : ""}" @click=${() => this._setMode(m.id)}>
-                  <ha-icon icon=${m.icon} style="--mdc-icon-size:18px"></ha-icon><span>${this._t(m.id)}</span>
-                </button>`)}
-            </div>`
-          : nothing}
 
-        ${this._sheet === "extra"
-          ? html`<div class="opt-row">
-              ${extras.map((e) => html`
-                <button class="opt ${this._isOn(c[e.entity]) ? `active ${e.tone || ""}` : ""}" @click=${() => this._toggle(c[e.entity])}>
-                  <ha-icon icon=${e.icon} style="--mdc-icon-size:18px"></ha-icon><span>${this._t(e.id)}</span>
-                </button>`)}
-            </div>`
-          : nothing}
       </ha-card>`;
   }
 

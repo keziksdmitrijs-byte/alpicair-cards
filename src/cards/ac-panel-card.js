@@ -2,7 +2,7 @@ import { LitElement, html, svg, nothing } from "lit";
 import { cardStyles } from "../styles.js";
 import { UiSettingsMixin } from "../ui-settings.js";
 import { localize } from "../localize.js";
-import { PanelMixin, panelHeader, ringOverlay } from "../panel.js";
+import { PanelMixin, panelBackdrop, panelHeader, ringOverlay } from "../panel.js";
 import "../editors/ac-panel-editor.js";
 
 const MODE_ICONS = {
@@ -118,7 +118,10 @@ export class AlpicairAcPanelCard extends PanelMixin(UiSettingsMixin(LitElement))
     const thickness = Number(this._config.ring_thickness) || 18;
     const r = (size - thickness) / 2 - 2;
     const c = 2 * Math.PI * r;
-    const ringColor = on ? "var(--primary-color)" : "var(--disabled-text-color)";
+    const ringColor = !on ? "var(--disabled-text-color)"
+      : st.state === "cool" ? "var(--alp-cool, #039be5)"
+      : st.state === "heat" ? "var(--alp-heat, #e74c3c)"
+      : "var(--primary-color)";
     const current = a.current_temperature;
 
     const tiles = [];
@@ -129,6 +132,7 @@ export class AlpicairAcPanelCard extends PanelMixin(UiSettingsMixin(LitElement))
 
     return html`
       <ha-card class="panel-card">
+        ${this._sheet ? panelBackdrop(this) : nothing}
         ${this._config.show_power !== false || this._config.back_path || this._config.back_action
           ? panelHeader(this) : nothing}
 
@@ -159,37 +163,40 @@ export class AlpicairAcPanelCard extends PanelMixin(UiSettingsMixin(LitElement))
         </div>
 
         ${tiles.length
-          ? html`<div class="grid c${Math.min(4, tiles.length)} ring-tiles">
-              ${tiles.map((t2) => html`
-                <button class="tile ${this._sheet === t2.id ? "sel" : ""}" @click=${() => this._toggle(t2.id)}>
-                  <span class="tile-icon"><ha-icon icon=${t2.icon} style="--mdc-icon-size:18px"></ha-icon></span>
-                  <span class="tile-val">${t2.value}</span>
-                </button>`)}
+          ? html`<div class="tilezone">
+              <div class="grid c${Math.min(4, tiles.length)} ring-tiles ${this._sheet && this._sheet !== "temp" ? "dimmed" : ""}">
+                ${tiles.map((t2) => html`
+                  <button class="tile ${this._sheet === t2.id ? "sel" : ""}" @click=${() => this._toggle(t2.id)}>
+                    <span class="tile-icon"><ha-icon icon=${t2.icon} style="--mdc-icon-size:18px"></ha-icon></span>
+                    <span class="tile-val">${t2.value}</span>
+                  </button>`)}
+              </div>
+              ${this._sheet === "mode"
+                ? this._optionRow((a.hvac_modes || []).filter((m) => m !== "off"),
+                    (m) => this._call("set_hvac_mode", { hvac_mode: m }),
+                    (m) => st.state === m, (m) => this._modeLabel(m), (m) => MODE_ICONS[m] || "mdi:thermostat")
+                : nothing}
+              ${this._sheet === "fan"
+                ? this._optionRow(a.fan_modes || [], (v) => this._call("set_fan_mode", { fan_mode: v }),
+                    (v) => a.fan_mode === v, (v) => this._t(v) || v, () => "mdi:fan")
+                : nothing}
+              ${this._sheet === "swing_v"
+                ? this._optionRow(a.swing_modes || [], (v) => this._call("set_swing_mode", { swing_mode: v }),
+                    (v) => a.swing_mode === v, (v) => this._t(v) || v, () => SWING_V_ICON)
+                : nothing}
+              ${this._sheet === "swing_h"
+                ? this._optionRow(a.swing_horizontal_modes || [], (v) => this._call("set_swing_horizontal_mode", { swing_horizontal_mode: v }),
+                    (v) => a.swing_horizontal_mode === v, (v) => this._t(v) || v, () => SWING_H_ICON)
+                : nothing}
             </div>`
           : nothing}
 
-        ${this._sheet === "mode"
-          ? this._optionRow((a.hvac_modes || []).filter((m) => m !== "off"),
-              (m) => this._call("set_hvac_mode", { hvac_mode: m }),
-              (m) => st.state === m, (m) => this._modeLabel(m), (m) => MODE_ICONS[m] || "mdi:thermostat")
-          : nothing}
-        ${this._sheet === "fan"
-          ? this._optionRow(a.fan_modes || [], (v) => this._call("set_fan_mode", { fan_mode: v }),
-              (v) => a.fan_mode === v, (v) => this._t(v) || v, () => "mdi:fan")
-          : nothing}
-        ${this._sheet === "swing_v"
-          ? this._optionRow(a.swing_modes || [], (v) => this._call("set_swing_mode", { swing_mode: v }),
-              (v) => a.swing_mode === v, (v) => this._t(v) || v, () => SWING_V_ICON)
-          : nothing}
-        ${this._sheet === "swing_h"
-          ? this._optionRow(a.swing_horizontal_modes || [], (v) => this._call("set_swing_horizontal_mode", { swing_horizontal_mode: v }),
-              (v) => a.swing_horizontal_mode === v, (v) => this._t(v) || v, () => SWING_H_ICON)
-          : nothing}
       </ha-card>`;
   }
 
   _optionRow(options, onSelect, isActive, label, icon) {
-    return html`<div class="opt-row">
+    return html`<div class="opt-row floating">
+
       ${options.map((o) => html`
         <button class="opt ${isActive(o) ? "active" : ""}" @click=${() => { onSelect(o); this._sheet = null; }}>
           <ha-icon icon=${icon(o)} style="--mdc-icon-size:18px"></ha-icon><span>${label(o)}</span>

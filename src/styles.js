@@ -215,7 +215,7 @@ export const cardStyles = css`
     backdrop-filter: blur(4px);
   }
   .ring-overlay-grid { display: grid; gap: 6px; width: 78%; }
-  .ring-stats { width: 100%; margin-top: 14px; }
+  .ring-stats { width: 100%; margin-top: 8px; }
   .ring-stat {
     border-radius: 12px; background: var(--secondary-background-color);
     border: 1px solid transparent; padding: calc(8px * var(--alp-bs, 1)) 6px;
@@ -227,9 +227,9 @@ export const cardStyles = css`
   .ring-stat.sel.heat { background: rgba(244,81,30,.16); border-color: var(--alp-heat, #f4511e); }
   .ring-stat .rs-val { font-size: calc(17px * var(--alp-fs, 1)); font-weight: 800; font-variant-numeric: tabular-nums; }
   .ring-stepper { display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    width: 100%; background: var(--secondary-background-color); border-radius: 12px; padding: 6px 12px; margin-top: 8px; }
+    width: 100%; background: var(--secondary-background-color); border-radius: 12px; padding: 6px 12px; margin-top: 14px; }
   .ring-stepper .rs-target { font-size: calc(22px * var(--alp-fs, 1)); font-weight: 800; font-variant-numeric: tabular-nums; color: var(--alp-heat, #f4511e); }
-  .ring-mini { width: 100%; margin-top: 8px; }
+  .ring-mini { width: 100%; margin-top: 14px; }
 
   /* --- shared panel header (back + power) --- */
   .panel-header {
@@ -268,7 +268,7 @@ export const cardStyles = css`
   }
 
   /* --- tiles below the ring --- */
-  .ring-tiles { width: 100%; margin-top: 14px; }
+  .ring-tiles { width: 100%; margin-top: 8px; }
   .tile {
     min-height: calc(62px * var(--alp-bs, 1)); border-radius: 12px; cursor: pointer;
     border: 1px solid transparent; background: var(--secondary-background-color);
@@ -294,9 +294,24 @@ export const cardStyles = css`
   .dot.perf { background: var(--alp-perf, #4caf50); }
 
   /* --- option rows revealed by tiles --- */
-  .opt-row {
-    display: flex; flex-wrap: wrap; gap: 8px; width: 100%; margin-top: 8px;
+  .tilezone { position: relative; width: 100%; margin-top: 14px; }
+  .tilezone > .grid.dimmed {
+    opacity: .25; filter: blur(1.5px); pointer-events: none;
+    transition: opacity .18s, filter .18s;
   }
+  .tilezone > .floating {
+    position: absolute; left: 0; right: 0; bottom: 0; margin: 0; z-index: 40;
+    background: var(--card-background-color, #fff);
+    border-radius: 16px; padding: 8px; box-sizing: border-box;
+    box-shadow: 0 10px 28px rgba(0,0,0,.22);
+    animation: alp-pop .18s ease-out;
+  }
+  .tilezone > .ring-stepper.floating { display: flex; align-items: center; justify-content: center; gap: 14px; }
+  @keyframes alp-pop { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .opt-row {
+    display: flex; flex-wrap: wrap; gap: 8px; width: 100%; margin-top: 14px;
+  }
+
   .opt {
     flex: 1 1 30%; min-height: calc(44px * var(--alp-bs, 1)); border-radius: 12px; cursor: pointer;
     border: 2px solid var(--divider-color); background: var(--secondary-background-color);
@@ -340,5 +355,11 @@ export const cardStyles = css`
   .rt-val { font-size: calc(20px * var(--alp-fs, 1)); font-weight: 800; font-variant-numeric: tabular-nums; }
 
   /* tap on the empty overlay backdrop closes the sheet */
-  .ring-overlay { cursor: pointer; }
+  .panel-card { position: relative; overflow: hidden; }
+  .panel-backdrop {
+    position: absolute; inset: 0; z-index: 30; border: 0; margin: 0; padding: 0;
+    cursor: default; background: rgba(var(--rgb-card-background-color, 255,255,255), .55);
+    backdrop-filter: blur(1.5px); -webkit-backdrop-filter: blur(1.5px);
+  }
+  .ring-overlay { z-index: 40; cursor: default; background: var(--card-background-color, #fff); box-shadow: 0 10px 28px rgba(0,0,0,.22); }
 `;

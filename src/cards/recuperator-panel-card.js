@@ -2,7 +2,7 @@ import { LitElement, html, svg, nothing } from "lit";
 import { cardStyles } from "../styles.js";
 import { UiSettingsMixin } from "../ui-settings.js";
 import { localize } from "../localize.js";
-import { PanelMixin, panelHeader, ringOverlay } from "../panel.js";
+import { PanelMixin, panelBackdrop, panelHeader, ringOverlay } from "../panel.js";
 import "../editors/recuperator-panel-editor.js";
 
 const MODES = [
@@ -166,6 +166,7 @@ export class AlpicairRecuperatorPanelCard extends PanelMixin(UiSettingsMixin(Lit
 
     return html`
       <ha-card class="panel-card">
+        ${this._hasOpenPanel ? panelBackdrop(this) : nothing}
         ${this._config.show_header !== false ? panelHeader(this) : nothing}
 
         <div class="ring-wrap" style=${`width:${size}px;height:${size}px`}>
@@ -196,44 +197,48 @@ export class AlpicairRecuperatorPanelCard extends PanelMixin(UiSettingsMixin(Lit
             : nothing}
         </div>
 
-        <div class="grid c3 ring-stats">
-          ${this._config.show_target
-            ? html`<button class="ring-stat ${this._editingTarget ? "sel" : ""}"
-                @click=${() => { this._editingTarget = !this._editingTarget; this._showTemps = false; }}>
-                <ha-icon icon="mdi:target" style="--mdc-icon-size:18px;color:var(--primary-color)"></ha-icon>
-                <span class="rs-val">${this._target !== null ? this._target.toFixed(1) + "°" : "—"}</span>
-              </button>`
+        <div class="tilezone">
+          <div class="grid c3 ring-stats ${this._editingTarget || this._showTemps ? "dimmed" : ""}">
+            ${this._config.show_target
+              ? html`<button class="ring-stat ${this._editingTarget ? "sel" : ""}"
+                  @click=${() => { this._editingTarget = !this._editingTarget; this._showTemps = false; }}>
+                  <ha-icon icon="mdi:target" style="--mdc-icon-size:18px;color:var(--primary-color)"></ha-icon>
+                  <span class="rs-val">${this._target !== null ? this._target.toFixed(1) + "°" : "—"}</span>
+                </button>`
+              : nothing}
+            ${this._config.show_indoor
+              ? html`<button class="ring-stat ${this._showTemps ? "sel heat" : ""}"
+                  @click=${() => { this._showTemps = !this._showTemps; this._editingTarget = false; }}>
+                  <ha-icon icon="mdi:home-thermometer" style="--mdc-icon-size:18px;color:var(--alp-heat,#f4511e)"></ha-icon>
+                  <span class="rs-val">${this._num(this._config.indoor_entity) !== null ? this._num(this._config.indoor_entity).toFixed(1) + "°" : "—"}</span>
+                </button>`
+              : nothing}
+            ${this._config.show_recuperation
+              ? html`<div class="ring-stat">
+                  <ha-icon icon="mdi:recycle" style="--mdc-icon-size:18px;color:var(--alp-perf,#4caf50)"></ha-icon>
+                  <span class="rs-val">${Math.round(this._recup)}%</span>
+                </div>`
+              : nothing}
+          </div>
+
+          ${this._editingTarget && this._target !== null
+            ? html`<div class="ring-stepper floating">
+                <button class="stepbtn" @click=${() => this._setTarget(this._target - 0.5)}>−</button>
+                <span class="rs-target">${this._target.toFixed(1)}°C</span>
+                <button class="stepbtn" @click=${() => this._setTarget(this._target + 0.5)}>+</button>
+              </div>`
             : nothing}
-          ${this._config.show_indoor
-            ? html`<button class="ring-stat ${this._showTemps ? "sel heat" : ""}"
-                @click=${() => { this._showTemps = !this._showTemps; this._editingTarget = false; }}>
-                <ha-icon icon="mdi:home-thermometer" style="--mdc-icon-size:18px;color:var(--alp-heat,#f4511e)"></ha-icon>
-                <span class="rs-val">${this._num(this._config.indoor_entity) !== null ? this._num(this._config.indoor_entity).toFixed(1) + "°" : "—"}</span>
-              </button>`
-            : nothing}
-          ${this._config.show_recuperation
-            ? html`<div class="ring-stat">
-                <ha-icon icon="mdi:recycle" style="--mdc-icon-size:18px;color:var(--alp-perf,#4caf50)"></ha-icon>
-                <span class="rs-val">${Math.round(this._recup)}%</span>
+
+          ${this._showTemps
+            ? html`<div class="grid c3 ring-mini floating">
+                ${this._mini("mdi:snowflake", this._num(this._config.outdoor_entity), "cool")}
+                ${this._mini("mdi:arrow-down", this._num(this._config.supply_entity), "heat")}
+                ${this._mini("mdi:arrow-up", this._num(this._config.extract_entity), "heat")}
               </div>`
             : nothing}
         </div>
 
-        ${this._editingTarget && this._target !== null
-          ? html`<div class="ring-stepper">
-              <button class="stepbtn" @click=${() => this._setTarget(this._target - 0.5)}>−</button>
-              <span class="rs-target">${this._target.toFixed(1)}°C</span>
-              <button class="stepbtn" @click=${() => this._setTarget(this._target + 0.5)}>+</button>
-            </div>`
-          : nothing}
 
-        ${this._showTemps
-          ? html`<div class="grid c3 ring-mini">
-              ${this._mini("mdi:snowflake", this._num(this._config.outdoor_entity), "cool")}
-              ${this._mini("mdi:arrow-down", this._num(this._config.supply_entity), "heat")}
-              ${this._mini("mdi:arrow-up", this._num(this._config.extract_entity), "heat")}
-            </div>`
-          : nothing}
       </ha-card>`;
   }
 

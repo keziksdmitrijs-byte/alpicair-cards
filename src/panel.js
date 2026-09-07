@@ -42,6 +42,12 @@ export const PanelMixin = (Base) =>
     }
   };
 
+/** Full-card modal backdrop. It blocks every control except the active popup. */
+export function panelBackdrop(card) {
+  return html`<button class="panel-backdrop" aria-label="Close menu"
+    @click=${() => card._closePanels()}></button>`;
+}
+
 /**
  * Shared panel header: back button (left) + power button (right).
  * `card` must expose `_panelOn` (bool) and `_togglePower()`.
