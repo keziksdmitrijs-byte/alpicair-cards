@@ -59,6 +59,10 @@ export class AlpicairAcPanelCard extends PanelMixin(UiSettingsMixin(LitElement))
 
   getCardSize() { return 6; }
   _t(k) { return localize(this.hass, this._config, k); }
+  _svgColor(name, fallback) {
+    const value = getComputedStyle(this).getPropertyValue(name).trim();
+    return value && !value.includes("var(") ? value : fallback;
+  }
   get _stateObj() { return this.hass && this.hass.states[this._config.entity]; }
 
   _modeLabel(mode) { return this._t(MODE_KEYS[mode] || mode) || mode; }
@@ -118,10 +122,11 @@ export class AlpicairAcPanelCard extends PanelMixin(UiSettingsMixin(LitElement))
     const thickness = Number(this._config.ring_thickness) || 18;
     const r = (size - thickness) / 2 - 2;
     const c = 2 * Math.PI * r;
-    const ringColor = !on ? "var(--disabled-text-color)"
-      : st.state === "cool" ? "var(--alp-cool, #039be5)"
-      : st.state === "heat" ? "var(--alp-heat, #e74c3c)"
-      : "var(--primary-color)";
+    const ringColor = !on ? this._svgColor("--disabled-text-color", "#9e9e9e")
+      : st.state === "cool" ? this._svgColor("--alp-cool", "#039be5")
+      : st.state === "heat" ? this._svgColor("--alp-heat", "#e74c3c")
+      : this._svgColor("--primary-color", "#03a9f4");
+    const trackColor = this._svgColor("--secondary-background-color", "#e5e7eb");
     const current = a.current_temperature;
 
     const tiles = [];
@@ -139,11 +144,11 @@ export class AlpicairAcPanelCard extends PanelMixin(UiSettingsMixin(LitElement))
         <div class="ring-wrap" style=${`width:${size}px;height:${size}px`}>
           <svg width=${size} height=${size} class="ring" style="transform:rotate(-90deg)">
             ${svg`<circle cx=${size / 2} cy=${size / 2} r=${r} fill="none"
-              stroke-width=${thickness} stroke-linecap="round" style="stroke:var(--secondary-background-color)" />`}
+              stroke=${trackColor} stroke-width=${thickness} stroke-linecap="round" />`}
             ${svg`<circle cx=${size / 2} cy=${size / 2} r=${r} fill="none"
               stroke-width=${thickness} stroke-linecap="round"
               stroke-dasharray=${c} stroke-dashoffset=${c * (1 - (on ? pct : 0))}
-              style=${`stroke:${ringColor};transition:stroke-dashoffset .5s, stroke .3s`} />`}
+              stroke=${ringColor} style="transition:stroke-dashoffset .5s, stroke .3s" />`}
           </svg>
 
           <button class="ring-center" @click=${() => this._toggle("temp")}>

@@ -44,6 +44,10 @@ export class AlpicairHeatPumpPanelCard extends PanelMixin(UiSettingsMixin(LitEle
 
   getCardSize() { return 6; }
   _t(k) { return localize(this.hass, this._config, k); }
+  _svgColor(name, fallback) {
+    const value = getComputedStyle(this).getPropertyValue(name).trim();
+    return value && !value.includes("var(") ? value : fallback;
+  }
   _st(id) { return id && this.hass && this.hass.states[id]; }
   _num(id) {
     const st = this._st(id);
@@ -136,7 +140,8 @@ export class AlpicairHeatPumpPanelCard extends PanelMixin(UiSettingsMixin(LitEle
     const thickness = Number(c.ring_thickness) || 18;
     const r = (size - thickness) / 2 - 2;
     const circ = 2 * Math.PI * r;
-    const ringColor = on ? "var(--alp-water, #039be5)" : "var(--disabled-text-color)";
+    const ringColor = on ? this._svgColor("--alp-water", "#039be5") : this._svgColor("--disabled-text-color", "#9e9e9e");
+    const trackColor = this._svgColor("--secondary-background-color", "#e5e7eb");
     const activeMode = MODES.find((m) => this._isMode(m.id));
     const extras = EXTRAS.filter((e) => c[e.cfg] !== false && c[e.entity]);
 
@@ -148,11 +153,11 @@ export class AlpicairHeatPumpPanelCard extends PanelMixin(UiSettingsMixin(LitEle
         <div class="ring-wrap" style=${`width:${size}px;height:${size}px`}>
           <svg width=${size} height=${size} class="ring" style="transform:rotate(-90deg)">
             ${svg`<circle cx=${size / 2} cy=${size / 2} r=${r} fill="none"
-              stroke-width=${thickness} stroke-linecap="round" style="stroke:var(--secondary-background-color)" />`}
+              stroke=${trackColor} stroke-width=${thickness} stroke-linecap="round" />`}
             ${svg`<circle cx=${size / 2} cy=${size / 2} r=${r} fill="none"
               stroke-width=${thickness} stroke-linecap="round"
               stroke-dasharray=${circ} stroke-dashoffset=${circ * (1 - (on ? pct : 0))}
-              style=${`stroke:${ringColor};transition:stroke-dashoffset .5s, stroke .3s`} />`}
+              stroke=${ringColor} style="transition:stroke-dashoffset .5s, stroke .3s" />`}
           </svg>
 
           <button class="ring-center" @click=${() => this._toggleSheet("temp")}>

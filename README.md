@@ -5,6 +5,35 @@
 кондиционера/вентиляции, панель теплового насоса, кондиционер, тепловой насос,
 температуры и настройки устройства.
 
+### `custom:alpicair-start-menu-card` (начальное меню)
+
+```yaml
+type: custom:alpicair-start-menu-card
+name: Климат
+weather_entity: weather.home
+show_date: true
+show_weather: true
+show_recuperator: true
+show_air_conditioner: true
+show_heat_pump: true
+recuperator_action:
+  action: navigate
+  navigation_path: /lovelace/recuperator
+air_conditioner_action:
+  action: navigate
+  navigation_path: /lovelace/conditioner
+heat_pump_action:
+  action: navigate
+  navigation_path: /lovelace/heat-pump
+menu_action:
+  action: navigate
+  navigation_path: /lovelace/menu
+```
+
+Карточка показывает часы, дату и данные выбранной сущности погоды. В визуальном
+редакторе можно отдельно скрыть кнопки рекуператора, кондиционера и теплового
+насоса, а также назначить действие каждой кнопке и кнопке «Меню».
+
 - Полностью визуальные редакторы (`ha-form`) — все кнопки управления включаются/выключаются галочками.
 - Кондиционер настраивается **одной сущностью** домена `climate`.
 - Кнопка настроек рекуператора поддерживает **короткое нажатие** и **долгое удержание** с настраиваемыми действиями.

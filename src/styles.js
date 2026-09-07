@@ -362,4 +362,29 @@ export const cardStyles = css`
     backdrop-filter: blur(1.5px); -webkit-backdrop-filter: blur(1.5px);
   }
   .ring-overlay { z-index: 40; cursor: default; background: var(--card-background-color, #fff); box-shadow: 0 10px 28px rgba(0,0,0,.22); }
+
+  /* --- start menu --- */
+  .start-menu-card { gap: 18px; overflow: hidden; }
+  .start-top { display: flex; align-items: center; justify-content: space-between; gap: 18px; min-height: 108px; }
+  .start-time-block { min-width: 0; }
+  .start-name { margin-bottom: 2px; font-size: calc(13px * var(--alp-fs, 1)); font-weight: 700; color: var(--secondary-text-color); }
+  .start-time { display: block; font-size: calc(52px * var(--alp-fs, 1)); line-height: 1; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .start-date { margin-top: 6px; font-size: calc(13px * var(--alp-fs, 1)); font-weight: 600; color: var(--secondary-text-color); text-transform: capitalize; }
+  .start-weather { flex: 0 0 auto; display: grid; grid-template-columns: auto auto; align-items: center; column-gap: 8px; padding: 12px; border-radius: 12px; background: var(--secondary-background-color); }
+  .start-weather ha-icon { grid-row: 1 / span 2; color: var(--primary-color); --mdc-icon-size: calc(34px * var(--alp-bs, 1)); }
+  .start-weather-temp { font-size: calc(22px * var(--alp-fs, 1)); line-height: 1; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .start-weather-state { max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: calc(11px * var(--alp-fs, 1)); font-weight: 600; color: var(--secondary-text-color); }
+  .start-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .start-action { min-height: calc(64px * var(--alp-bs, 1)); min-width: 0; border: 1px solid var(--divider-color); border-radius: 12px; padding: 10px 10px; cursor: pointer; background: var(--secondary-background-color); color: var(--primary-text-color); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 8px; text-align: left; font: inherit; font-size: calc(13px * var(--alp-fs, 1)); font-weight: 700; }
+  .start-action:active { transform: scale(.98); }
+  .start-action > ha-icon:first-child { color: var(--primary-color); --mdc-icon-size: calc(24px * var(--alp-bs, 1)); }
+  .start-action span { min-width: 0; overflow-wrap: anywhere; }
+  .start-action .start-chevron { color: var(--secondary-text-color); --mdc-icon-size: 18px; }
+  .start-action.menu { border-color: transparent; background: var(--primary-color); color: var(--text-primary-color, #fff); }
+  .start-action.menu > ha-icon, .start-action.menu .start-chevron { color: currentColor; }
+  @media (max-width: 360px) {
+    .start-top { align-items: flex-start; flex-direction: column; }
+    .start-weather { width: 100%; box-sizing: border-box; }
+    .start-actions { grid-template-columns: 1fr; }
+  }
 `;

@@ -1,3 +1,4 @@
+import "./cards/start-menu-card.js";
 import "./cards/recuperator-card.js";
 import "./cards/recuperator-panel-card.js";
 import "./cards/ac-panel-card.js";
@@ -8,7 +9,7 @@ import "./cards/sensors-card.js";
 import "./cards/device-settings-card.js";
 import "./cards/ui-settings-card.js";
 
-const VERSION = "1.2.1";
+const VERSION = "1.3.0";
 
 window.customCards = window.customCards || [];
 const register = (type, name, description) => {
@@ -20,6 +21,8 @@ const register = (type, name, description) => {
   });
 };
 
+register("alpicair-start-menu-card", "AlpicAir Start Menu Card",
+  "Home screen with clock, weather, configurable equipment shortcuts and menu action.");
 register("alpicair-recuperator-card", "AlpicAir Recuperator Card",
   "Recuperator control: modes, efficiency, fan speed and a configurable settings button.");
 register("alpicair-recuperator-panel-card", "AlpicAir Recuperator Panel Card",

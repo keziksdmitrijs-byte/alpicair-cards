@@ -51,6 +51,10 @@ export class AlpicairRecuperatorPanelCard extends PanelMixin(UiSettingsMixin(Lit
 
   getCardSize() { return 5; }
   _t(k) { return localize(this.hass, this._config, k); }
+  _svgColor(name, fallback) {
+    const value = getComputedStyle(this).getPropertyValue(name).trim();
+    return value && !value.includes("var(") ? value : fallback;
+  }
   _num(entity) {
     const st = entity && this.hass.states[entity];
     const v = st ? Number(st.state) : NaN;
@@ -161,8 +165,9 @@ export class AlpicairRecuperatorPanelCard extends PanelMixin(UiSettingsMixin(Lit
     const speed = this._speed;
     const activeId = this._activeId;
     const ActiveIcon = (MODES.find((m) => m.id === activeId) || MODES[2]).icon;
-    const ringColor = activeId === "boost" ? "var(--alp-boost, #ff9800)"
-      : activeId ? "var(--primary-color)" : "var(--disabled-text-color)";
+    const ringColor = activeId === "boost" ? this._svgColor("--alp-boost", "#ff9800")
+      : activeId ? this._svgColor("--primary-color", "#03a9f4") : this._svgColor("--disabled-text-color", "#9e9e9e");
+    const trackColor = this._svgColor("--secondary-background-color", "#e5e7eb");
 
     return html`
       <ha-card class="panel-card">
@@ -172,11 +177,11 @@ export class AlpicairRecuperatorPanelCard extends PanelMixin(UiSettingsMixin(Lit
         <div class="ring-wrap" style=${`width:${size}px;height:${size}px`}>
           <svg width=${size} height=${size} class="ring" style="transform:rotate(-90deg)">
             ${svg`<circle cx=${size / 2} cy=${size / 2} r=${r} fill="none"
-              stroke-width=${thickness} stroke-linecap="round" style="stroke:var(--secondary-background-color)" />`}
+              stroke=${trackColor} stroke-width=${thickness} stroke-linecap="round" />`}
             ${svg`<circle cx=${size / 2} cy=${size / 2} r=${r} fill="none"
               stroke-width=${thickness} stroke-linecap="round"
               stroke-dasharray=${c} stroke-dashoffset=${c * (1 - speed / 100)}
-              style=${`stroke:${ringColor};transition:stroke-dashoffset .5s, stroke .3s`} />`}
+              stroke=${ringColor} style="transition:stroke-dashoffset .5s, stroke .3s" />`}
           </svg>
 
           <button class="ring-center" @click=${() => this._open = !this._open}>
