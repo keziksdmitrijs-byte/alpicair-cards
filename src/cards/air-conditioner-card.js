@@ -172,9 +172,9 @@ export class AlpicairAirConditionerCard extends UiSettingsMixin(LitElement) {
               <svg viewBox="0 0 200 200" class="dial ${on ? "interactive" : ""}"
                 @pointerdown=${(e) => this._dialDrag(e, min, max, step)}>
                 ${svg`<path d=${arcPath(START, START + SWEEP)} fill="none" stroke="transparent" stroke-width="34" stroke-linecap="round" />`}
-                ${svg`<path d=${arcPath(START, START + SWEEP)} fill="none" stroke="var(--secondary-background-color)" stroke-width="9" stroke-linecap="round" />`}
-                ${on ? svg`<path d=${arcPath(START, angle)} fill="none" stroke="var(--primary-color)" stroke-width="9" stroke-linecap="round" />` : nothing}
-                ${svg`<circle cx=${knob.x} cy=${knob.y} r="13" fill="var(--card-background-color)" stroke=${on ? "var(--primary-color)" : "var(--disabled-text-color)"} stroke-width="3" />`}
+                ${svg`<path d=${arcPath(START, START + SWEEP)} fill="none" stroke-width="9" stroke-linecap="round" style="stroke:var(--secondary-background-color)" />`}
+                ${on ? svg`<path d=${arcPath(START, angle)} fill="none" stroke-width="9" stroke-linecap="round" style="stroke:var(--primary-color)" />` : nothing}
+                ${svg`<circle cx=${knob.x} cy=${knob.y} r="13" stroke-width="3" style=${`fill:var(--card-background-color);stroke:${on ? "var(--primary-color)" : "var(--disabled-text-color)"}`} />`}
               </svg>
               <div class="dial-center">
                 <div class="mode-label">${on ? this._modeLabel(st.state) : this._t("off")}</div>

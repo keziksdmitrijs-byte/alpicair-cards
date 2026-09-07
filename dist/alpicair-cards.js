@@ -428,11 +428,11 @@ var be=Object.defineProperty;var ye=(o,t,e)=>t in o?be(o,t,{enumerable:!0,config
         <div class="ring-wrap" style=${`width:${t}px;height:${t}px`}>
           <svg width=${t} height=${t} class="ring" style="transform:rotate(-90deg)">
             ${E`<circle cx=${t/2} cy=${t/2} r=${i} fill="none"
-              stroke="var(--secondary-background-color)" stroke-width=${e} stroke-linecap="round" />`}
+              stroke-width=${e} stroke-linecap="round" style="stroke:var(--secondary-background-color)" />`}
             ${E`<circle cx=${t/2} cy=${t/2} r=${i} fill="none"
-              stroke=${l} stroke-width=${e} stroke-linecap="round"
+              stroke-width=${e} stroke-linecap="round"
               stroke-dasharray=${s} stroke-dashoffset=${s*(1-a/100)}
-              style="transition:stroke-dashoffset .5s, stroke .3s" />`}
+              style=${`stroke:${l};transition:stroke-dashoffset .5s, stroke .3s`} />`}
           </svg>
 
           <button class="ring-center" @click=${()=>this._open=!this._open}>
@@ -494,11 +494,11 @@ var be=Object.defineProperty;var ye=(o,t,e)=>t in o?be(o,t,{enumerable:!0,config
         <div class="ring-wrap" style=${`width:${d}px;height:${d}px`}>
           <svg width=${d} height=${d} class="ring" style="transform:rotate(-90deg)">
             ${E`<circle cx=${d/2} cy=${d/2} r=${m} fill="none"
-              stroke="var(--secondary-background-color)" stroke-width=${g} stroke-linecap="round" />`}
+              stroke-width=${g} stroke-linecap="round" style="stroke:var(--secondary-background-color)" />`}
             ${E`<circle cx=${d/2} cy=${d/2} r=${m} fill="none"
-              stroke=${_} stroke-width=${g} stroke-linecap="round"
+              stroke-width=${g} stroke-linecap="round"
               stroke-dasharray=${b} stroke-dashoffset=${b*(1-(i?l:0))}
-              style="transition:stroke-dashoffset .5s, stroke .3s" />`}
+              style=${`stroke:${_};transition:stroke-dashoffset .5s, stroke .3s`} />`}
           </svg>
 
           <button class="ring-center" @click=${()=>this._toggle("temp")}>
@@ -543,11 +543,11 @@ var be=Object.defineProperty;var ye=(o,t,e)=>t in o?be(o,t,{enumerable:!0,config
         <div class="ring-wrap" style=${`width:${n}px;height:${n}px`}>
           <svg width=${n} height=${n} class="ring" style="transform:rotate(-90deg)">
             ${E`<circle cx=${n/2} cy=${n/2} r=${l} fill="none"
-              stroke="var(--secondary-background-color)" stroke-width=${p} stroke-linecap="round" />`}
+              stroke-width=${p} stroke-linecap="round" style="stroke:var(--secondary-background-color)" />`}
             ${E`<circle cx=${n/2} cy=${n/2} r=${l} fill="none"
-              stroke=${g} stroke-width=${p} stroke-linecap="round"
+              stroke-width=${p} stroke-linecap="round"
               stroke-dasharray=${d} stroke-dashoffset=${d*(1-(e?a:0))}
-              style="transition:stroke-dashoffset .5s, stroke .3s" />`}
+              style=${`stroke:${g};transition:stroke-dashoffset .5s, stroke .3s`} />`}
           </svg>
 
           <button class="ring-center" @click=${()=>this._toggleSheet("temp")}>
@@ -619,9 +619,9 @@ var be=Object.defineProperty;var ye=(o,t,e)=>t in o?be(o,t,{enumerable:!0,config
               <svg viewBox="0 0 200 200" class="dial ${i?"interactive":""}"
                 @pointerdown=${_=>this._dialDrag(_,s,a,n)}>
                 ${E`<path d=${Ht(H,H+B)} fill="none" stroke="transparent" stroke-width="34" stroke-linecap="round" />`}
-                ${E`<path d=${Ht(H,H+B)} fill="none" stroke="var(--secondary-background-color)" stroke-width="9" stroke-linecap="round" />`}
-                ${i?E`<path d=${Ht(H,d)} fill="none" stroke="var(--primary-color)" stroke-width="9" stroke-linecap="round" />`:r}
-                ${E`<circle cx=${g.x} cy=${g.y} r="13" fill="var(--card-background-color)" stroke=${i?"var(--primary-color)":"var(--disabled-text-color)"} stroke-width="3" />`}
+                ${E`<path d=${Ht(H,H+B)} fill="none" stroke-width="9" stroke-linecap="round" style="stroke:var(--secondary-background-color)" />`}
+                ${i?E`<path d=${Ht(H,d)} fill="none" stroke-width="9" stroke-linecap="round" style="stroke:var(--primary-color)" />`:r}
+                ${E`<circle cx=${g.x} cy=${g.y} r="13" stroke-width="3" style=${`fill:var(--card-background-color);stroke:${i?"var(--primary-color)":"var(--disabled-text-color)"}`} />`}
               </svg>
               <div class="dial-center">
                 <div class="mode-label">${i?this._modeLabel(t.state):this._t("off")}</div>

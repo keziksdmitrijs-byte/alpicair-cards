@@ -172,11 +172,11 @@ export class AlpicairRecuperatorPanelCard extends PanelMixin(UiSettingsMixin(Lit
         <div class="ring-wrap" style=${`width:${size}px;height:${size}px`}>
           <svg width=${size} height=${size} class="ring" style="transform:rotate(-90deg)">
             ${svg`<circle cx=${size / 2} cy=${size / 2} r=${r} fill="none"
-              stroke="var(--secondary-background-color)" stroke-width=${thickness} stroke-linecap="round" />`}
+              stroke-width=${thickness} stroke-linecap="round" style="stroke:var(--secondary-background-color)" />`}
             ${svg`<circle cx=${size / 2} cy=${size / 2} r=${r} fill="none"
-              stroke=${ringColor} stroke-width=${thickness} stroke-linecap="round"
+              stroke-width=${thickness} stroke-linecap="round"
               stroke-dasharray=${c} stroke-dashoffset=${c * (1 - speed / 100)}
-              style="transition:stroke-dashoffset .5s, stroke .3s" />`}
+              style=${`stroke:${ringColor};transition:stroke-dashoffset .5s, stroke .3s`} />`}
           </svg>
 
           <button class="ring-center" @click=${() => this._open = !this._open}>
