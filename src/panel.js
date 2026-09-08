@@ -55,11 +55,14 @@ export function panelBackdrop(card) {
 export function panelHeader(card) {
   const t = (k) => card._t(k);
   const on = !!card._panelOn;
+  const title = card._config.title ?? card._config.name
+    ?? (card._defaultTitle ? t(card._defaultTitle) : "");
   return html`<div class="panel-header">
     <button class="ph-btn back" title=${t("back")} aria-label=${t("back")}
       @click=${() => card._navigateBack()}>
       <ha-icon icon="mdi:chevron-left"></ha-icon>
     </button>
+    <div class="ph-title">${title}</div>
     <button class="ph-btn power ${on ? "on" : ""}" title=${t("power")} aria-label=${t("power")}
       @click=${() => card._togglePower()}>
       <ha-icon icon="mdi:power"></ha-icon>

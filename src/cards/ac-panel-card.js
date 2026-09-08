@@ -1,7 +1,7 @@
 import { LitElement, html, svg, nothing } from "lit";
 import { cardStyles } from "../styles.js";
 import { UiSettingsMixin } from "../ui-settings.js";
-import { localize } from "../localize.js";
+import { localize, localizeOption } from "../localize.js";
 import { PanelMixin, panelBackdrop, panelHeader, ringOverlay } from "../panel.js";
 import "../editors/ac-panel-editor.js";
 
@@ -57,6 +57,7 @@ export class AlpicairAcPanelCard extends PanelMixin(UiSettingsMixin(LitElement))
     };
   }
 
+  get _defaultTitle() { return "air_conditioner"; }
   getCardSize() { return 6; }
   _t(k) { return localize(this.hass, this._config, k); }
   _svgColor(name, fallback) {
@@ -65,7 +66,8 @@ export class AlpicairAcPanelCard extends PanelMixin(UiSettingsMixin(LitElement))
   }
   get _stateObj() { return this.hass && this.hass.states[this._config.entity]; }
 
-  _modeLabel(mode) { return this._t(MODE_KEYS[mode] || mode) || mode; }
+  _modeLabel(mode) { return MODE_KEYS[mode] ? this._t(MODE_KEYS[mode]) : (localizeOption(this.hass, this._config, mode) || mode); }
+  _opt(v) { return localizeOption(this.hass, this._config, v) || "—"; }
 
   _call(service, data) {
     this.hass.callService("climate", service, { entity_id: this._config.entity, ...data });
@@ -131,9 +133,9 @@ export class AlpicairAcPanelCard extends PanelMixin(UiSettingsMixin(LitElement))
 
     const tiles = [];
     if (this._config.show_mode) tiles.push({ id: "mode", icon: "mdi:tune", value: on ? this._modeLabel(st.state) : this._t("off"), label: this._t("settings") });
-    if (this._config.show_fan && a.fan_modes) tiles.push({ id: "fan", icon: "mdi:fan", value: this._t(a.fan_mode) || a.fan_mode || "—", label: this._t("fan_speed") });
-    if (this._config.show_swing_vertical && a.swing_modes) tiles.push({ id: "swing_v", icon: SWING_V_ICON, value: this._t(a.swing_mode) || a.swing_mode || "—", label: this._t("swing_vertical") });
-    if (this._config.show_swing_horizontal && a.swing_horizontal_modes) tiles.push({ id: "swing_h", icon: SWING_H_ICON, value: this._t(a.swing_horizontal_mode) || a.swing_horizontal_mode || "—", label: this._t("swing_horizontal") });
+    if (this._config.show_fan && a.fan_modes) tiles.push({ id: "fan", icon: "mdi:fan", value: this._opt(a.fan_mode), label: this._t("fan_speed") });
+    if (this._config.show_swing_vertical && a.swing_modes) tiles.push({ id: "swing_v", icon: SWING_V_ICON, value: this._opt(a.swing_mode), label: this._t("swing_vertical") });
+    if (this._config.show_swing_horizontal && a.swing_horizontal_modes) tiles.push({ id: "swing_h", icon: SWING_H_ICON, value: this._opt(a.swing_horizontal_mode), label: this._t("swing_horizontal") });
 
     return html`
       <ha-card class="panel-card">
@@ -141,7 +143,7 @@ export class AlpicairAcPanelCard extends PanelMixin(UiSettingsMixin(LitElement))
         ${this._config.show_power !== false || this._config.back_path || this._config.back_action
           ? panelHeader(this) : nothing}
 
-        <div class="ring-wrap" style=${`width:${size}px;height:${size}px`}>
+        <div class="ring-wrap" style=${`width:${size}px;height:${size}px;--alp-ring-inset:${thickness + 10}px`}>
           <svg width=${size} height=${size} class="ring" style="transform:rotate(-90deg)">
             ${svg`<circle cx=${size / 2} cy=${size / 2} r=${r} fill="none"
               stroke=${trackColor} stroke-width=${thickness} stroke-linecap="round" />`}
@@ -183,15 +185,15 @@ export class AlpicairAcPanelCard extends PanelMixin(UiSettingsMixin(LitElement))
                 : nothing}
               ${this._sheet === "fan"
                 ? this._optionRow(a.fan_modes || [], (v) => this._call("set_fan_mode", { fan_mode: v }),
-                    (v) => a.fan_mode === v, (v) => this._t(v) || v, () => "mdi:fan")
+                    (v) => a.fan_mode === v, (v) => this._opt(v), () => "mdi:fan")
                 : nothing}
               ${this._sheet === "swing_v"
                 ? this._optionRow(a.swing_modes || [], (v) => this._call("set_swing_mode", { swing_mode: v }),
-                    (v) => a.swing_mode === v, (v) => this._t(v) || v, () => SWING_V_ICON)
+                    (v) => a.swing_mode === v, (v) => this._opt(v), () => SWING_V_ICON)
                 : nothing}
               ${this._sheet === "swing_h"
                 ? this._optionRow(a.swing_horizontal_modes || [], (v) => this._call("set_swing_horizontal_mode", { swing_horizontal_mode: v }),
-                    (v) => a.swing_horizontal_mode === v, (v) => this._t(v) || v, () => SWING_H_ICON)
+                    (v) => a.swing_horizontal_mode === v, (v) => this._opt(v), () => SWING_H_ICON)
                 : nothing}
             </div>`
           : nothing}

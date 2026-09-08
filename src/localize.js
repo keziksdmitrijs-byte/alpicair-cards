@@ -80,3 +80,52 @@ export function localize(hass, config, key) {
 }
 
 export const LANGUAGES = ["auto", "en", "ru", "lv"];
+
+/**
+ * Maps a raw device value (any language / any spelling) onto a dictionary key,
+ * so mode names, fan speeds and swing modes are translated as well.
+ */
+const OPTION_MATCHERS = [
+  ["off", ["off", "выкл", "откл", "izsl", "stop"]],
+  ["building_protection", ["building", "protect", "защит", "здан", "aizsardz", "ekas", "ēkas"]],
+  ["economy", ["eco", "эконом", "ekonom"]],
+  ["comfort", ["comfort", "normal", "комфорт", "нормал", "normāl"]],
+  ["boost", ["boost", "intens", "интенс", "турбо", "turbo", "maxim", "макс"]],
+  ["heating_water", ["heat+water", "heating + water", "отопление + вода", "нагрев + вода", "apkure + ūdens", "both", "combi"]],
+  ["hot_water", ["hot water", "dhw", "boiler", "горяч", "бойлер", "karstais", "ūdens", "udens"]],
+  ["heating", ["heating", "отоплен", "обогрев", "apkure"]],
+  ["quick_heat", ["quick", "fast", "быстр", "ātrā", "atra"]],
+  ["quiet_mode", ["quiet", "silent", "night", "тих", "клус"]],
+  ["disinfection", ["disinfect", "legionella", "дезинф", "dezinf"]],
+  ["heat", ["heat", "обогрев", "нагрев", "sild"]],
+  ["cool", ["cool", "охлажд", "dzes"]],
+  ["dry", ["dry", "осуш", "sausin"]],
+  ["fan_only", ["fan_only", "fan only", "ventil", "вентил"]],
+  ["auto", ["auto", "авто"]],
+  ["full_swing", ["swing", "качан", "šūpo", "supo"]],
+  ["fixed", ["fixed", "фиксир", "hold", "stop"]],
+  ["low", ["low", "min", "низк", "zem"]],
+  ["medium", ["medium", "mid", "средн", "vid"]],
+  ["high", ["high", "max", "высок", "augst"]],
+  ["on", ["on", "вкл", "iesl"]],
+];
+
+export function localizeOption(hass, config, raw) {
+  if (raw == null || raw === "") return null;
+  const value = String(raw);
+  const key = value.trim().toLowerCase().replace(/[\s-]+/g, "_");
+  if (en[key]) return localize(hass, config, key);
+  const plain = value.trim().toLowerCase();
+  const hit = OPTION_MATCHERS.find(([, kws]) => kws.some((k) => plain.includes(k)));
+  return hit ? localize(hass, config, hit[0]) : value;
+}
+
+/** Dictionary key that best matches a raw device value, or null. */
+export function optionKey(raw) {
+  if (raw == null || raw === "") return null;
+  const plain = String(raw).trim().toLowerCase();
+  const key = plain.replace(/[\s-]+/g, "_");
+  if (en[key]) return key;
+  const hit = OPTION_MATCHERS.find(([, kws]) => kws.some((k) => plain.includes(k)));
+  return hit ? hit[0] : null;
+}

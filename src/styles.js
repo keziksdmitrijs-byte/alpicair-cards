@@ -1,7 +1,61 @@
 import { css } from "lit";
 
 export const cardStyles = css`
-  :host { display: block; }
+  :host {
+    display: block;
+    /* one shared accent palette for every AlpicAir card */
+    --alp-heat: #f4511e;
+    --alp-cool: #039be5;
+    --alp-water: #039be5;
+    --alp-perf: #43a047;
+    --alp-boost: #fb8c00;
+    --alp-warn: #f9a825;
+  }
+  /* forced light theme */
+  :host([alp-theme="light"]) {
+    --primary-text-color: #16181d;
+    --secondary-text-color: #5f6672;
+    --disabled-text-color: #9aa1ad;
+    --card-background-color: #ffffff;
+    --ha-card-background: #ffffff;
+    --secondary-background-color: #f1f3f6;
+    --divider-color: rgba(0, 0, 0, .10);
+    --rgb-card-background-color: 255, 255, 255;
+    color: var(--primary-text-color);
+  }
+  /* forced dark theme */
+  :host([alp-theme="dark"]) {
+    --primary-text-color: #e9edf3;
+    --secondary-text-color: #9aa3b2;
+    --disabled-text-color: #6b7280;
+    --card-background-color: #1b1c20;
+    --ha-card-background: #1b1c20;
+    --secondary-background-color: #26282e;
+    --divider-color: rgba(255, 255, 255, .12);
+    --rgb-card-background-color: 27, 28, 32;
+    --alp-heat: #ff7043;
+    --alp-cool: #4fc3f7;
+    --alp-water: #4fc3f7;
+    --alp-perf: #66bb6a;
+    --alp-boost: #ffa726;
+    --alp-warn: #ffca28;
+    color: var(--primary-text-color);
+  }
+  :host([alp-theme]) ha-card {
+    background: var(--card-background-color);
+    color: var(--primary-text-color);
+    border: 1px solid var(--divider-color);
+  }
+  .card-title {
+    font-size: calc(15px * var(--alp-fs, 1));
+    font-weight: 800; line-height: 1.2; text-align: center;
+    color: var(--primary-text-color);
+  }
+  .panel-header .ph-title {
+    flex: 1; min-width: 0; padding: 0 8px; text-align: center;
+    font-size: calc(15px * var(--alp-fs, 1)); font-weight: 800;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
   ha-card {
     padding: 16px;
     border-radius: var(--ha-card-border-radius, 16px);
@@ -200,7 +254,8 @@ export const cardStyles = css`
   .ring-wrap { position: relative; display: grid; place-items: center; }
   .ring { display: block; }
   .ring-center {
-    position: absolute; inset: 0; margin: auto;
+    position: absolute; inset: var(--alp-ring-inset, 30px); margin: auto;
+    box-sizing: border-box;
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
     border-radius: 50%; border: 2px solid var(--divider-color);
     background: var(--secondary-background-color); cursor: pointer;

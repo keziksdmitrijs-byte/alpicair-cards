@@ -1,7 +1,7 @@
 import { LitElement, html, svg, nothing } from "lit";
 import { cardStyles } from "../styles.js";
 import { UiSettingsMixin } from "../ui-settings.js";
-import { localize } from "../localize.js";
+import { localize, localizeOption } from "../localize.js";
 import { PanelMixin, panelBackdrop, panelHeader, ringOverlay } from "../panel.js";
 import "../editors/recuperator-panel-editor.js";
 
@@ -44,11 +44,13 @@ export class AlpicairRecuperatorPanelCard extends PanelMixin(UiSettingsMixin(Lit
       show_supply: true,
       show_extract: true,
       show_mode_picker: true,
+      show_title: true,
       language: "auto",
       ...config,
     };
   }
 
+  get _defaultTitle() { return "recuperator"; }
   getCardSize() { return 5; }
   _t(k) { return localize(this.hass, this._config, k); }
   _svgColor(name, fallback) {
@@ -91,7 +93,11 @@ export class AlpicairRecuperatorPanelCard extends PanelMixin(UiSettingsMixin(Lit
   _isActive(id) {
     const cur = norm(this._mode);
     if (!cur) return false;
-    return cur === norm(this._optionFor(id)) || cur === id;
+    if (cur === norm(this._optionFor(id)) || cur === id) return true;
+    // fall back to matching the raw device value by keyword
+    const def = MODES.find((m) => m.id === id);
+    const matched = MODES.find((m) => m.kw.some((k) => cur.includes(k)));
+    return !!def && matched === def;
   }
   get _activeId() { return MODES.find((m) => this._isActive(m.id))?.id || null; }
 
@@ -174,7 +180,7 @@ export class AlpicairRecuperatorPanelCard extends PanelMixin(UiSettingsMixin(Lit
         ${this._hasOpenPanel ? panelBackdrop(this) : nothing}
         ${this._config.show_header !== false ? panelHeader(this) : nothing}
 
-        <div class="ring-wrap" style=${`width:${size}px;height:${size}px`}>
+        <div class="ring-wrap" style=${`width:${size}px;height:${size}px;--alp-ring-inset:${thickness + 10}px`}>
           <svg width=${size} height=${size} class="ring" style="transform:rotate(-90deg)">
             ${svg`<circle cx=${size / 2} cy=${size / 2} r=${r} fill="none"
               stroke=${trackColor} stroke-width=${thickness} stroke-linecap="round" />`}
@@ -186,7 +192,7 @@ export class AlpicairRecuperatorPanelCard extends PanelMixin(UiSettingsMixin(Lit
 
           <button class="ring-center" @click=${() => this._open = !this._open}>
             <ha-icon icon=${ActiveIcon} style=${`--mdc-icon-size:28px;color:${ringColor}`}></ha-icon>
-            <span class="rc-mode">${activeId ? this._t(activeId) : (this._mode || this._t("off"))}</span>
+            <span class="rc-mode">${activeId ? this._t(activeId) : (localizeOption(this.hass, this._config, this._mode) || this._t("off"))}</span>
             <span class="rc-pct">${Math.round(speed)}%</span>
           </button>
 

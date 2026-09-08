@@ -1,7 +1,7 @@
 import { LitElement, html, svg, nothing } from "lit";
 import { cardStyles } from "../styles.js";
 import { UiSettingsMixin } from "../ui-settings.js";
-import { localize } from "../localize.js";
+import { localize, optionKey } from "../localize.js";
 import { PanelMixin, panelBackdrop, panelHeader, ringOverlay } from "../panel.js";
 import "../editors/heat-pump-panel-editor.js";
 
@@ -42,6 +42,7 @@ export class AlpicairHeatPumpPanelCard extends PanelMixin(UiSettingsMixin(LitEle
     this._pending = {};
   }
 
+  get _defaultTitle() { return "heat_pump"; }
   getCardSize() { return 6; }
   _t(k) { return localize(this.hass, this._config, k); }
   _svgColor(name, fallback) {
@@ -108,7 +109,9 @@ export class AlpicairHeatPumpPanelCard extends PanelMixin(UiSettingsMixin(LitEle
   _optionFor(mode) { return this._config[`option_${mode}`] || mode; }
   _isMode(mode) {
     const st = this._st(this._config.mode_entity);
-    return !!st && st.state === this._optionFor(mode);
+    if (!st) return false;
+    if (st.state === this._optionFor(mode)) return true;
+    return optionKey(st.state) === mode;
   }
   _setMode(mode) {
     const ent = this._config.mode_entity;
@@ -150,7 +153,7 @@ export class AlpicairHeatPumpPanelCard extends PanelMixin(UiSettingsMixin(LitEle
         ${this._sheet ? panelBackdrop(this) : nothing}
         ${(c.show_power !== false || c.back_path || c.back_action) ? panelHeader(this) : nothing}
 
-        <div class="ring-wrap" style=${`width:${size}px;height:${size}px`}>
+        <div class="ring-wrap" style=${`width:${size}px;height:${size}px;--alp-ring-inset:${thickness + 10}px`}>
           <svg width=${size} height=${size} class="ring" style="transform:rotate(-90deg)">
             ${svg`<circle cx=${size / 2} cy=${size / 2} r=${r} fill="none"
               stroke=${trackColor} stroke-width=${thickness} stroke-linecap="round" />`}
