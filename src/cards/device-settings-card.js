@@ -100,7 +100,7 @@ export class AlpicairDeviceSettingsCard extends UiSettingsMixin(LitElement) {
     return html`
       ${toggle
         ? html`<div class="select-row">
-            <ha-icon icon="mdi:weather-night" style="--mdc-icon-size:20px;color:var(--primary-color)"></ha-icon>
+            <ha-icon icon="mdi:weather-night" style="--mdc-icon-size:20px"></ha-icon>
             <span class="lbl">${this._t("night_cooling")}</span>
             <ha-switch .checked=${toggle.state === "on"}
               @change=${() => this.hass.callService("homeassistant", "toggle", { entity_id: this._config.night_cooling_entity })}></ha-switch>

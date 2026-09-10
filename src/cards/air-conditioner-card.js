@@ -221,9 +221,9 @@ export class AlpicairAirConditionerCard extends UiSettingsMixin(LitElement) {
   _select(icon, value, options, onChange) {
     return html`
       <label class="select-row">
-        <ha-icon icon=${icon} style="--mdc-icon-size:18px;color:var(--secondary-text-color)"></ha-icon>
+        <ha-icon icon=${icon} style="--mdc-icon-size:18px"></ha-icon>
         <span class="lbl">${this._t(String(value)) || value}</span>
-        <ha-icon icon="mdi:chevron-down" style="--mdc-icon-size:18px;color:var(--secondary-text-color)"></ha-icon>
+        <ha-icon icon="mdi:chevron-down" style="--mdc-icon-size:18px"></ha-icon>
         <select .value=${value ?? ""} @change=${(e) => onChange(e.target.value)}>
           ${options.map((o) => html`<option value=${o} ?selected=${o === value}>${this._t(o) || o}</option>`)}
         </select>

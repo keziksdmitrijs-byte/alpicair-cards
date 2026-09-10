@@ -17,6 +17,7 @@ class RecuperatorPanelEditor extends BaseCardEditor {
     target_max: "Target maximum (°C)",
     ring_size: "Ring size (px)",
     ring_thickness: "Ring thickness (px)",
+    target_control_width: "Target temperature control width (px)",
     back_path: "Back navigation path (e.g. /lovelace/home)",
     back_action: "Back button action",
     default_mode: "Mode on power on",
@@ -79,6 +80,7 @@ class RecuperatorPanelEditor extends BaseCardEditor {
         { name: "ring_size", selector: { number: { min: 140, max: 480, step: 10, mode: "slider", unit_of_measurement: "px" } } },
         { name: "ring_thickness", selector: { number: { min: 6, max: 40, step: 1, mode: "slider", unit_of_measurement: "px" } } },
       ] },
+      { name: "target_control_width", selector: { number: { min: 160, max: 480, step: 10, mode: "slider", unit_of_measurement: "px" } } },
       { type: "grid", name: "", schema: [
         { name: "target_min", selector: { number: { min: 5, max: 30, step: 0.5, mode: "box", unit_of_measurement: "°C" } } },
         { name: "target_max", selector: { number: { min: 15, max: 40, step: 0.5, mode: "box", unit_of_measurement: "°C" } } },

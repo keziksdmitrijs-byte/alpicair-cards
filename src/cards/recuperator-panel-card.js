@@ -36,6 +36,7 @@ export class AlpicairRecuperatorPanelCard extends PanelMixin(UiSettingsMixin(Lit
     this._config = {
       ring_size: 260,
       ring_thickness: 18,
+      target_control_width: 260,
       show_header: true,
       show_target: true,
       show_indoor: true,
@@ -191,7 +192,7 @@ export class AlpicairRecuperatorPanelCard extends PanelMixin(UiSettingsMixin(Lit
           </svg>
 
           <button class="ring-center" @click=${() => this._open = !this._open}>
-            <ha-icon icon=${ActiveIcon} style=${`--mdc-icon-size:28px;color:${ringColor}`}></ha-icon>
+            <ha-icon icon=${ActiveIcon} style="--mdc-icon-size:28px"></ha-icon>
             <span class="rc-mode">${activeId ? this._t(activeId) : (localizeOption(this.hass, this._config, this._mode) || this._t("off"))}</span>
             <span class="rc-pct">${Math.round(speed)}%</span>
           </button>
@@ -213,27 +214,27 @@ export class AlpicairRecuperatorPanelCard extends PanelMixin(UiSettingsMixin(Lit
             ${this._config.show_target
               ? html`<button class="ring-stat ${this._editingTarget ? "sel" : ""}"
                   @click=${() => { this._editingTarget = !this._editingTarget; this._showTemps = false; }}>
-                  <ha-icon icon="mdi:target" style="--mdc-icon-size:18px;color:var(--primary-color)"></ha-icon>
+                  <ha-icon icon="mdi:target" style="--mdc-icon-size:18px"></ha-icon>
                   <span class="rs-val">${this._target !== null ? this._target.toFixed(1) + "°" : "—"}</span>
                 </button>`
               : nothing}
             ${this._config.show_indoor
               ? html`<button class="ring-stat ${this._showTemps ? "sel heat" : ""}"
                   @click=${() => { this._showTemps = !this._showTemps; this._editingTarget = false; }}>
-                  <ha-icon icon="mdi:home-thermometer" style="--mdc-icon-size:18px;color:var(--alp-heat,#f4511e)"></ha-icon>
+                  <ha-icon icon="mdi:home-thermometer" style="--mdc-icon-size:18px"></ha-icon>
                   <span class="rs-val">${this._num(this._config.indoor_entity) !== null ? this._num(this._config.indoor_entity).toFixed(1) + "°" : "—"}</span>
                 </button>`
               : nothing}
             ${this._config.show_recuperation
               ? html`<div class="ring-stat">
-                  <ha-icon icon="mdi:recycle" style="--mdc-icon-size:18px;color:var(--alp-perf,#4caf50)"></ha-icon>
+                  <ha-icon icon="mdi:recycle" style="--mdc-icon-size:18px"></ha-icon>
                   <span class="rs-val">${Math.round(this._recup)}%</span>
                 </div>`
               : nothing}
           </div>
 
           ${this._editingTarget && this._target !== null
-            ? html`<div class="ring-stepper floating">
+            ? html`<div class="ring-stepper floating" style=${`--alp-target-control-width:${Math.max(160, Number(this._config.target_control_width) || 260)}px`}>
                 <button class="stepbtn" @click=${() => this._setTarget(this._target - 0.5)}>−</button>
                 <span class="rs-target">${this._target.toFixed(1)}°C</span>
                 <button class="stepbtn" @click=${() => this._setTarget(this._target + 0.5)}>+</button>
@@ -254,9 +255,8 @@ export class AlpicairRecuperatorPanelCard extends PanelMixin(UiSettingsMixin(Lit
   }
 
   _mini(icon, value, tone) {
-    const color = tone === "heat" ? "var(--alp-heat,#f4511e)" : "var(--alp-cool,#039be5)";
     return html`<div class="ring-stat">
-      <ha-icon icon=${icon} style=${`--mdc-icon-size:18px;color:${color}`}></ha-icon>
+      <ha-icon icon=${icon} style="--mdc-icon-size:18px"></ha-icon>
       <span class="rs-val">${value !== null ? value.toFixed(1) + "°" : "—"}</span>
     </div>`;
   }

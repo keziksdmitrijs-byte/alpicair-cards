@@ -63,6 +63,13 @@ export const cardStyles = css`
     flex-direction: column;
     gap: 14px;
   }
+  button, input, select, textarea {
+    color: var(--primary-text-color);
+    font-family: inherit;
+  }
+  ha-icon {
+    color: var(--primary-color);
+  }
   .header { display: flex; align-items: center; gap: 12px; }
   .header .icon {
     width: 40px; height: 40px; border-radius: 12px;
@@ -258,7 +265,7 @@ export const cardStyles = css`
     box-sizing: border-box;
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
     border-radius: 50%; border: 2px solid var(--divider-color);
-    background: var(--secondary-background-color); cursor: pointer;
+    background: var(--secondary-background-color); color: var(--primary-text-color); cursor: pointer;
     transition: transform .12s;
   }
   .ring-center:active { transform: scale(.97); }
@@ -275,15 +282,16 @@ export const cardStyles = css`
     border-radius: 12px; background: var(--secondary-background-color);
     border: 1px solid transparent; padding: calc(8px * var(--alp-bs, 1)) 6px;
     display: flex; flex-direction: column; align-items: center; gap: 4px;
-    cursor: pointer; text-align: center; transition: background .18s;
+    color: var(--primary-text-color); cursor: pointer; text-align: center; transition: background .18s;
   }
   button.ring-stat { cursor: pointer; }
   .ring-stat.sel { background: rgba(var(--rgb-primary-color, 3,169,244), .16); border-color: var(--primary-color); }
   .ring-stat.sel.heat { background: rgba(244,81,30,.16); border-color: var(--alp-heat, #f4511e); }
   .ring-stat .rs-val { font-size: calc(17px * var(--alp-fs, 1)); font-weight: 800; font-variant-numeric: tabular-nums; }
   .ring-stepper { display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    width: 100%; background: var(--secondary-background-color); border-radius: 12px; padding: 6px 12px; margin-top: 14px; }
-  .ring-stepper .rs-target { font-size: calc(22px * var(--alp-fs, 1)); font-weight: 800; font-variant-numeric: tabular-nums; color: var(--alp-heat, #f4511e); }
+    width: min(100%, var(--alp-target-control-width, 260px)); background: var(--secondary-background-color); color: var(--primary-text-color);
+    border-radius: 12px; padding: 6px 12px; margin: 14px auto 0; }
+  .ring-stepper .rs-target { font-size: calc(22px * var(--alp-fs, 1)); font-weight: 800; font-variant-numeric: tabular-nums; color: var(--primary-color); }
   .ring-mini { width: 100%; margin-top: 14px; }
 
   /* --- shared panel header (back + power) --- */
@@ -298,7 +306,7 @@ export const cardStyles = css`
     cursor: pointer; display: grid; place-items: center;
     transition: background .18s, color .18s;
   }
-  .ph-btn:hover { color: var(--primary-text-color); }
+  .ph-btn:hover { color: var(--primary-color); }
   .ph-btn:active { transform: scale(.97); }
   .ph-btn.power.on {
     border-color: transparent;
@@ -333,7 +341,7 @@ export const cardStyles = css`
   }
   .tile:active { transform: scale(.97); }
   .tile.sel { background: rgba(var(--rgb-primary-color, 3,169,244), .16); border-color: var(--primary-color); }
-  .tile-icon { color: var(--secondary-text-color); display: grid; place-items: center; }
+  .tile-icon { color: var(--primary-color); display: grid; place-items: center; }
   .tile.sel .tile-icon { color: var(--primary-color); }
   .tile-val {
     font-size: calc(13px * var(--alp-fs, 1)); font-weight: 800; line-height: 1.15;
@@ -434,7 +442,7 @@ export const cardStyles = css`
   .start-action:active { transform: scale(.98); }
   .start-action > ha-icon:first-child { color: var(--primary-color); --mdc-icon-size: calc(24px * var(--alp-bs, 1)); }
   .start-action span { min-width: 0; overflow-wrap: anywhere; }
-  .start-action .start-chevron { color: var(--secondary-text-color); --mdc-icon-size: 18px; }
+  .start-action .start-chevron { color: var(--primary-color); --mdc-icon-size: 18px; }
   .start-action.menu { border-color: transparent; background: var(--primary-color); color: var(--text-primary-color, #fff); }
   .start-action.menu > ha-icon, .start-action.menu .start-chevron { color: currentColor; }
   @media (max-width: 360px) {

@@ -143,7 +143,7 @@ export class AlpicairHeatPumpPanelCard extends PanelMixin(UiSettingsMixin(LitEle
     const thickness = Number(c.ring_thickness) || 18;
     const r = (size - thickness) / 2 - 2;
     const circ = 2 * Math.PI * r;
-    const ringColor = on ? this._svgColor("--alp-water", "#039be5") : this._svgColor("--disabled-text-color", "#9e9e9e");
+    const ringColor = on ? this._svgColor("--primary-color", "#03a9f4") : this._svgColor("--disabled-text-color", "#9e9e9e");
     const trackColor = this._svgColor("--secondary-background-color", "#e5e7eb");
     const activeMode = MODES.find((m) => this._isMode(m.id));
     const extras = EXTRAS.filter((e) => c[e.cfg] !== false && c[e.entity]);
@@ -164,8 +164,8 @@ export class AlpicairHeatPumpPanelCard extends PanelMixin(UiSettingsMixin(LitEle
           </svg>
 
           <button class="ring-center" @click=${() => this._toggleSheet("temp")}>
-            <span class="rc-cap"><ha-icon icon="mdi:water-thermometer" style="--mdc-icon-size:16px;color:var(--alp-water,#039be5)"></ha-icon> ${this._t("hot_water")}</span>
-            <span class="rc-target" style=${on ? "color:var(--alp-water,#039be5)" : ""}>${water != null ? water.toFixed(1) + "°" : "—"}</span>
+            <span class="rc-cap"><ha-icon icon="mdi:water-thermometer" style="--mdc-icon-size:16px"></ha-icon> ${this._t("hot_water")}</span>
+            <span class="rc-target" style=${on ? "color:var(--primary-color)" : ""}>${water != null ? water.toFixed(1) + "°" : "—"}</span>
             <span class="rc-sub">${activeMode ? this._t(activeMode.id) : (on ? this._t("running") : this._t("off"))}</span>
           </button>
 
@@ -226,12 +226,11 @@ export class AlpicairHeatPumpPanelCard extends PanelMixin(UiSettingsMixin(LitEle
     const dec = st < 1 ? 1 : 0;
     const clamp = (v) => Math.min(Number(limits.max), Math.max(Number(limits.min), Math.round(v * 10) / 10));
     const v = val ?? Number(limits.min);
-    const color = tone === "water" ? "var(--alp-water, #039be5)" : "var(--alp-heat, #f4511e)";
     return html`<div class="rt-row">
       <button class="stepbtn round" @click=${() => this._setTarget(entityId, clamp(v - st))}>−</button>
       <span class="rt-inner">
-        <span class="rt-label"><ha-icon icon=${icon} style=${`--mdc-icon-size:15px;color:${color}`}></ha-icon> ${this._t(key)}</span>
-        <span class="rt-val" style=${`color:${color}`}>${Number(v).toFixed(dec)}°</span>
+        <span class="rt-label"><ha-icon icon=${icon} style="--mdc-icon-size:15px"></ha-icon> ${this._t(key)}</span>
+        <span class="rt-val">${Number(v).toFixed(dec)}°</span>
       </span>
       <button class="stepbtn round" @click=${() => this._setTarget(entityId, clamp(v + st))}>+</button>
     </div>`;
