@@ -8,8 +8,9 @@ import "./cards/heat-pump-card.js";
 import "./cards/sensors-card.js";
 import "./cards/device-settings-card.js";
 import "./cards/ui-settings-card.js";
+import "./cards/solar-card.js";
 
-const VERSION = "1.3.1";
+const VERSION = "1.4.0";
 
 window.customCards = window.customCards || [];
 const register = (type, name, description) => {
@@ -39,6 +40,9 @@ register("alpicair-sensors-card", "AlpicAir Temperatures Card",
   "Outdoor/indoor/supply/extract temperatures with target slider.");
 register("alpicair-device-settings-card", "AlpicAir Device Settings Card",
   "Night cooling, fan speed presets and device date & time.");
+
+register("alpicair-solar-card", "AlpicAir Solar Inverter Card",
+  "Solar panel inverter: production ring with daily/monthly stats, battery, grid and house tiles.");
 
 register("alpicair-ui-settings-card", "AlpicAir Interface Settings Card",
   "Global language, theme and accent for all AlpicAir cards.");

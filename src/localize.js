@@ -1,4 +1,5 @@
 const en = {
+  solar: "Solar", solar_station: "Solar station", solar_inverter: "Solar inverter", production: "Production", battery: "Battery", house: "House", to_grid: "To grid", from_grid: "From grid", today: "Today", this_month: "This month", charging: "Charging", discharging: "Discharging", peak_power: "Peak", kw: "kW", kwh: "kWh",
   ui_settings: "Interface settings", language: "Language", theme: "Theme", light: "Light", dark: "Dark", accent_color: "Accent color", button_size: "Button size", font_size: "Font size", compact: "Compact mode", reset: "Reset", applies_to_all: "Applies to all AlpicAir cards in this browser", current: "Current", target: "Target", boiler: "Boiler",
   recuperator: "Recuperator", recuperator_panel: "Recuperator panel", air_conditioner: "Air conditioner", heat_pump: "Heat pump",
   sensors: "Temperatures", device_settings: "Device settings", settings: "Settings", back: "Back", menu: "Menu", weather: "Weather",
@@ -20,6 +21,7 @@ const en = {
 };
 
 const ru = {
+  solar: "Солнце", solar_station: "Солнечная станция", solar_inverter: "Солнечный инвертор", production: "Выработка", battery: "Батарея", house: "Дом", to_grid: "В сеть", from_grid: "Из сети", today: "Сегодня", this_month: "В этом месяце", charging: "Заряд", discharging: "Разряд", peak_power: "Пик", kw: "кВт", kwh: "кВт·ч",
   ui_settings: "Настройки интерфейса", language: "Язык", theme: "Тема", light: "Светлая", dark: "Тёмная", accent_color: "Акцентный цвет", button_size: "Размер кнопок", font_size: "Размер шрифта", compact: "Компактный режим", reset: "Сбросить", applies_to_all: "Применяется ко всем карточкам AlpicAir в этом браузере", current: "Сейчас", target: "Задано", boiler: "Бойлер",
   recuperator: "Рекуператор", recuperator_panel: "Панель рекуператора", air_conditioner: "Кондиционер", heat_pump: "Тепловой насос",
   sensors: "Температуры", device_settings: "Настройки устройства", settings: "Настройки", back: "Назад", menu: "Меню", weather: "Погода",
@@ -41,6 +43,7 @@ const ru = {
 };
 
 const lv = {
+  solar: "Saule", solar_station: "Saules stacija", solar_inverter: "Saules invertors", production: "Ražošana", battery: "Baterija", house: "Māja", to_grid: "Uz tīklu", from_grid: "No tīkla", today: "Šodien", this_month: "Šomēnes", charging: "Uzlāde", discharging: "Izlāde", peak_power: "Maksimums", kw: "kW", kwh: "kWh",
   ui_settings: "Saskarnes iestatījumi", language: "Valoda", theme: "Tēma", light: "Gaišā", dark: "Tumšā", accent_color: "Akcenta krāsa", button_size: "Pogu izmērs", font_size: "Fonta izmērs", compact: "Kompaktais režīms", reset: "Atiestatīt", applies_to_all: "Attiecas uz visām AlpicAir kartēm šajā pārlūkā", current: "Pašlaik", target: "Uzstādīts", boiler: "Boileris",
   recuperator: "Rekuperators", recuperator_panel: "Rekuperatora panelis", air_conditioner: "Kondicionieris", heat_pump: "Siltumsūknis",
   sensors: "Temperatūras", device_settings: "Ierīces iestatījumi", settings: "Iestatījumi", back: "Atpakaļ", menu: "Izvēlne", weather: "Laikapstākļi",

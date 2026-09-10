@@ -450,4 +450,21 @@ export const cardStyles = css`
     .start-weather { width: 100%; box-sizing: border-box; }
     .start-actions { grid-template-columns: 1fr; }
   }
+
+  /* --- solar inverter card --- */
+  .tile-cap { font-size: calc(11px * var(--alp-fs, 1)); font-weight: 600; color: var(--secondary-text-color);
+    max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tile.good { background: rgba(76,175,80,.16); border-color: rgba(76,175,80,.45); }
+  .tile.good .tile-icon, .tile.good .tile-val { color: var(--alp-perf, #4caf50); }
+  .tile.bad { background: rgba(219,68,55,.16); border-color: rgba(219,68,55,.45); }
+  .tile.bad .tile-icon, .tile.bad .tile-val { color: var(--error-color, #db4437); }
+  .stat-pop { flex-direction: column; gap: 6px; }
+  .stat-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%;
+    box-sizing: border-box; background: var(--secondary-background-color); border-radius: 12px; padding: 8px 12px; }
+  .stat-row .sr-label { font-size: calc(12px * var(--alp-fs, 1)); font-weight: 700; color: var(--secondary-text-color);
+    min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .stat-row .sr-val { font-size: calc(17px * var(--alp-fs, 1)); font-weight: 800; font-variant-numeric: tabular-nums;
+    color: var(--primary-text-color); white-space: nowrap; }
+  .stat-row .sr-val.good { color: var(--alp-perf, #4caf50); }
+  .stat-row .sr-val.bad { color: var(--error-color, #db4437); }
 `;

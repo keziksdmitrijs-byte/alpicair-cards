@@ -128,6 +128,37 @@ back_path: /lovelace/home
 Снизу две кнопки: режим (нагрев / горячая вода / нагрев+вода) и быстрые режимы
 (быстрый нагрев, тихий режим, дезинфекция) с индикаторами включённых режимов.
 
+### `custom:alpicair-solar-card` (солнечный инвертор)
+
+```yaml
+type: custom:alpicair-solar-card
+production_entity: sensor.inverter_pv_power
+peak_power: 6
+production_today_entity: sensor.inverter_energy_today
+production_month_entity: sensor.inverter_energy_month
+battery_level_entity: sensor.battery_level
+battery_power_entity: sensor.battery_power      # + заряд / − разряд
+grid_power_entity: sensor.grid_power            # + отдача / − забор
+house_power_entity: sensor.house_power
+export_today_entity: sensor.grid_export_today
+export_month_entity: sensor.grid_export_month
+import_today_entity: sensor.grid_import_today
+import_month_entity: sensor.grid_import_month
+house_today_entity: sensor.house_energy_today
+house_month_entity: sensor.house_energy_month
+ring_size: 260
+ring_thickness: 18
+back_path: /lovelace/home
+```
+
+Кольцо показывает текущую выработку относительно пиковой мощности, в центре —
+значение в кВт. Снизу три плитки: батарея (%), сеть (кВт) и потребление дома
+(кВт). Плитки батареи и сети становятся бледно-зелёными при заряде/отдаче и
+бледно-красными при разряде/заборе. Нажатие на кольцо показывает выработку за
+день и месяц, на плитку сети — отдачу и забор за день и месяц, на плитку дома —
+потребление за день и месяц. Если знак датчика противоположный, включите
+`invert_grid` / `invert_battery`.
+
 ### `custom:alpicair-air-conditioner-card`
 
 ```yaml
