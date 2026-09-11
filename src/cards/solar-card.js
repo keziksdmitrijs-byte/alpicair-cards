@@ -134,7 +134,7 @@ export class AlpicairSolarCard extends PanelMixin(UiSettingsMixin(LitElement)) {
     return html`
       <ha-card class="panel-card">
         ${this._sheet ? panelBackdrop(this) : nothing}
-        ${(c.show_power !== false || c.back_path || c.back_action) ? panelHeader(this) : nothing}
+        ${panelHeader(this, { power: false })}
 
         <div class="ring-wrap" style=${`width:${size}px;height:${size}px;--alp-ring-inset:${thickness + 10}px`}>
           <svg width=${size} height=${size} class="ring" style="transform:rotate(-90deg)">

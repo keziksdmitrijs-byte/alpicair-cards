@@ -52,9 +52,10 @@ export function panelBackdrop(card) {
  * Shared panel header: back button (left) + power button (right).
  * `card` must expose `_panelOn` (bool) and `_togglePower()`.
  */
-export function panelHeader(card) {
+export function panelHeader(card, options = {}) {
   const t = (k) => card._t(k);
   const on = !!card._panelOn;
+  const showPower = options.power !== false;
   const title = card._config.title ?? card._config.name
     ?? (card._defaultTitle ? t(card._defaultTitle) : "");
   return html`<div class="panel-header">
@@ -63,12 +64,15 @@ export function panelHeader(card) {
       <ha-icon icon="mdi:chevron-left"></ha-icon>
     </button>
     <div class="ph-title">${title}</div>
-    <button class="ph-btn power ${on ? "on" : ""}" title=${t("power")} aria-label=${t("power")}
-      @click=${() => card._togglePower()}>
-      <ha-icon icon="mdi:power"></ha-icon>
-    </button>
+    ${showPower
+      ? html`<button class="ph-btn power ${on ? "on" : ""}" title=${t("power")} aria-label=${t("power")}
+          @click=${() => card._togglePower()}>
+          <ha-icon icon="mdi:power"></ha-icon>
+        </button>`
+      : html`<span class="ph-btn" style="visibility:hidden"></span>`}
   </div>`;
 }
+
 
 /** Overlay that fills the ring and closes when its empty area is clicked. */
 export function ringOverlay(card, onEmptyClick, inner) {

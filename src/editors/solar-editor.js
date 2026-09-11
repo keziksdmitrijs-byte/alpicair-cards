@@ -27,7 +27,6 @@ class SolarEditor extends BaseCardEditor {
     ring_thickness: "Ring thickness (px)",
     back_path: "Back navigation path (e.g. /lovelace/home)",
     back_action: "Back button action",
-    show_power: "Show header (back + power)",
     show_battery: "Show battery tile",
     show_grid: "Show grid tile",
     show_house: "Show house tile",
@@ -81,7 +80,7 @@ class SolarEditor extends BaseCardEditor {
       num("decimals", 0, 3, 1),
       { name: "back_path", selector: { text: {} } },
       { name: "back_action", selector: { ui_action: {} } },
-      boolRow(["show_power", "show_battery", "show_grid", "show_house"]),
+      boolRow(["show_battery", "show_grid", "show_house"]),
       boolRow(["invert_grid", "invert_battery"]),
       sizeFields,
     ];

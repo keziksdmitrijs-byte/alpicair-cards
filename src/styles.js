@@ -448,7 +448,7 @@ export const cardStyles = css`
   @media (max-width: 360px) {
     .start-top { align-items: flex-start; flex-direction: column; }
     .start-weather { width: 100%; box-sizing: border-box; }
-    .start-actions { grid-template-columns: 1fr; }
+    .start-actions { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
   }
 
   /* --- solar inverter card --- */

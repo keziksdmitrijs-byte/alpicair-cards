@@ -1,9 +1,10 @@
 import { LitElement, html, nothing } from "lit";
 import { cardStyles } from "../styles.js";
-import { UiSettingsMixin } from "../ui-settings.js";
+import { UiSettingsMixin, getUiSettings } from "../ui-settings.js";
 import { localize } from "../localize.js";
 import { performAction } from "../actions.js";
 import "../editors/start-menu-editor.js";
+
 
 const WEATHER_ICONS = {
   "clear-night": "mdi:weather-night",
@@ -27,7 +28,11 @@ const MENU_ITEMS = [
   { id: "recuperator", icon: "mdi:air-filter", show: "show_recuperator", action: "recuperator_action" },
   { id: "air_conditioner", icon: "mdi:air-conditioner", show: "show_air_conditioner", action: "air_conditioner_action" },
   { id: "heat_pump", icon: "mdi:heat-pump", show: "show_heat_pump", action: "heat_pump_action" },
+  { id: "solar_station", icon: "mdi:solar-power-variant", show: "show_solar", action: "solar_action" },
+  { id: "custom", icon: "mdi:star-outline", show: "show_custom", action: "custom_action", nameKey: "custom_name", iconKey: "custom_icon" },
+  { id: "menu", icon: "mdi:menu", show: "show_menu", action: "menu_action", accent: true },
 ];
+
 
 export class AlpicairStartMenuCard extends UiSettingsMixin(LitElement) {
   static properties = { hass: {}, _config: { state: true }, _now: { state: true } };
@@ -53,12 +58,21 @@ export class AlpicairStartMenuCard extends UiSettingsMixin(LitElement) {
       show_recuperator: true,
       show_air_conditioner: true,
       show_heat_pump: true,
+      show_solar: true,
+      show_custom: false,
+      show_menu: true,
+      custom_name: "",
+      custom_icon: "mdi:star-outline",
+      columns: "auto",
       language: "auto",
       recuperator_action: { action: "none" },
       air_conditioner_action: { action: "none" },
       heat_pump_action: { action: "none" },
+      solar_action: { action: "none" },
+      custom_action: { action: "none" },
       menu_action: { action: "none" },
       ...config,
+
     };
     this._now = new Date();
   }
@@ -78,9 +92,15 @@ export class AlpicairStartMenuCard extends UiSettingsMixin(LitElement) {
   _t(key) { return localize(this.hass, this._config, key); }
   _locale() {
     const configured = this._config.language;
-    const lang = configured && configured !== "auto" ? configured : (this.hass?.language || "en");
-    return lang === "ru" ? "ru-RU" : lang === "lv" ? "lv-LV" : lang;
+    const global = getUiSettings().language;
+    const lang = configured && configured !== "auto"
+      ? configured
+      : global && global !== "auto"
+        ? global
+        : this.hass?.language || "en";
+    return lang === "ru" ? "ru-RU" : lang === "lv" ? "lv-LV" : lang === "en" ? "en-GB" : lang;
   }
+
   _act(action) { performAction(this, this.hass, null, action); }
 
   /** Clock source: an optional entity, otherwise the browser clock, plus offset. */
@@ -116,7 +136,15 @@ export class AlpicairStartMenuCard extends UiSettingsMixin(LitElement) {
     const weather = this._config.weather_entity ? this.hass.states[this._config.weather_entity] : null;
     const temperature = weather?.attributes?.temperature;
     const unit = weather?.attributes?.temperature_unit || this.hass.config?.unit_system?.temperature || "°C";
+    const weatherText = weather
+      ? this._t(`w_${String(weather.state).replace(/-/g, "_")}`) !== `w_${String(weather.state).replace(/-/g, "_")}`
+        ? this._t(`w_${String(weather.state).replace(/-/g, "_")}`)
+        : weather.state
+      : this._t("weather");
     const visibleItems = MENU_ITEMS.filter((item) => this._config[item.show] !== false);
+    const cols = this._config.columns && this._config.columns !== "auto"
+      ? Number(this._config.columns)
+      : Math.max(1, Math.ceil(visibleItems.length / 2));
 
     return html`<ha-card class="start-menu-card">
       <div class="start-top">
@@ -131,24 +159,20 @@ export class AlpicairStartMenuCard extends UiSettingsMixin(LitElement) {
           ? html`<div class="start-weather">
               <ha-icon icon=${WEATHER_ICONS[weather?.state] || "mdi:weather-partly-cloudy"}></ha-icon>
               <span class="start-weather-temp">${temperature != null ? `${temperature}${unit}` : "—"}</span>
-              <span class="start-weather-state">${weather ? (this.hass.formatEntityState?.(weather) || weather.state) : this._t("weather")}</span>
+              <span class="start-weather-state">${weatherText}</span>
             </div>`
           : nothing}
       </div>
 
-      <div class="start-actions">
+      <div class="start-actions" style=${`grid-template-columns:repeat(${cols}, minmax(0, 1fr))`}>
         ${visibleItems.map((item) => html`
-          <button class="start-action" @click=${() => this._act(this._config[item.action])}>
-            <ha-icon icon=${item.icon}></ha-icon>
-            <span>${this._t(item.id)}</span>
+          <button class="start-action ${item.accent ? "menu" : ""}" @click=${() => this._act(this._config[item.action])}>
+            <ha-icon icon=${(item.iconKey && this._config[item.iconKey]) || item.icon}></ha-icon>
+            <span>${(item.nameKey && this._config[item.nameKey]) || this._t(item.id)}</span>
             <ha-icon class="start-chevron" icon="mdi:chevron-right"></ha-icon>
           </button>`)}
-        <button class="start-action menu" @click=${() => this._act(this._config.menu_action)}>
-          <ha-icon icon="mdi:menu"></ha-icon>
-          <span>${this._t("menu")}</span>
-          <ha-icon class="start-chevron" icon="mdi:chevron-right"></ha-icon>
-        </button>
       </div>
+
     </ha-card>`;
   }
 }

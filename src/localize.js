@@ -1,8 +1,9 @@
 const en = {
+  w_clear_night: "Clear", w_cloudy: "Cloudy", w_exceptional: "Exceptional", w_fog: "Fog", w_hail: "Hail", w_lightning: "Lightning", w_lightning_rainy: "Thunderstorm", w_partlycloudy: "Partly cloudy", w_pouring: "Pouring", w_rainy: "Rainy", w_snowy: "Snowy", w_snowy_rainy: "Sleet", w_sunny: "Sunny", w_windy: "Windy", w_windy_variant: "Windy",
   solar: "Solar", solar_station: "Solar station", solar_inverter: "Solar inverter", production: "Production", battery: "Battery", house: "House", to_grid: "To grid", from_grid: "From grid", today: "Today", this_month: "This month", charging: "Charging", discharging: "Discharging", peak_power: "Peak", kw: "kW", kwh: "kWh",
   ui_settings: "Interface settings", language: "Language", theme: "Theme", light: "Light", dark: "Dark", accent_color: "Accent color", button_size: "Button size", font_size: "Font size", compact: "Compact mode", reset: "Reset", applies_to_all: "Applies to all AlpicAir cards in this browser", current: "Current", target: "Target", boiler: "Boiler",
   recuperator: "Recuperator", recuperator_panel: "Recuperator panel", air_conditioner: "Air conditioner", heat_pump: "Heat pump",
-  sensors: "Temperatures", device_settings: "Device settings", settings: "Settings", back: "Back", menu: "Menu", weather: "Weather",
+  sensors: "Temperatures", device_settings: "Device settings", settings: "Settings", back: "Back", menu: "Menu", weather: "Weather", custom: "Custom button",
   recuperation: "Recuperation", fan_speed: "Fan speed", supply: "Supply", exhaust: "Exhaust",
   off: "Off", on: "On", building_protection: "Building protection", economy: "Economy",
   comfort: "Comfort", boost: "Boost", outdoor: "Outdoor", indoor: "Indoor",
@@ -21,10 +22,11 @@ const en = {
 };
 
 const ru = {
+  w_clear_night: "Ясно", w_cloudy: "Облачно", w_exceptional: "Экстремально", w_fog: "Туман", w_hail: "Град", w_lightning: "Гроза", w_lightning_rainy: "Гроза с дождём", w_partlycloudy: "Переменная облачность", w_pouring: "Ливень", w_rainy: "Дождь", w_snowy: "Снег", w_snowy_rainy: "Дождь со снегом", w_sunny: "Солнечно", w_windy: "Ветрено", w_windy_variant: "Ветрено",
   solar: "Солнце", solar_station: "Солнечная станция", solar_inverter: "Солнечный инвертор", production: "Выработка", battery: "Батарея", house: "Дом", to_grid: "В сеть", from_grid: "Из сети", today: "Сегодня", this_month: "В этом месяце", charging: "Заряд", discharging: "Разряд", peak_power: "Пик", kw: "кВт", kwh: "кВт·ч",
   ui_settings: "Настройки интерфейса", language: "Язык", theme: "Тема", light: "Светлая", dark: "Тёмная", accent_color: "Акцентный цвет", button_size: "Размер кнопок", font_size: "Размер шрифта", compact: "Компактный режим", reset: "Сбросить", applies_to_all: "Применяется ко всем карточкам AlpicAir в этом браузере", current: "Сейчас", target: "Задано", boiler: "Бойлер",
   recuperator: "Рекуператор", recuperator_panel: "Панель рекуператора", air_conditioner: "Кондиционер", heat_pump: "Тепловой насос",
-  sensors: "Температуры", device_settings: "Настройки устройства", settings: "Настройки", back: "Назад", menu: "Меню", weather: "Погода",
+  sensors: "Температуры", device_settings: "Настройки устройства", settings: "Настройки", back: "Назад", menu: "Меню", weather: "Погода", custom: "Своя кнопка",
   recuperation: "Рекуперация", fan_speed: "Скорость вентилятора", supply: "Приток", exhaust: "Вытяжка",
   off: "Выкл", on: "Вкл", building_protection: "Защита здания", economy: "Экономичный",
   comfort: "Комфорт", boost: "Boost", outdoor: "Улица", indoor: "В доме",
@@ -43,10 +45,11 @@ const ru = {
 };
 
 const lv = {
+  w_clear_night: "Skaidrs", w_cloudy: "Mākoņains", w_exceptional: "Ārkārtējs", w_fog: "Migla", w_hail: "Krusa", w_lightning: "Pērkons", w_lightning_rainy: "Pērkona lietus", w_partlycloudy: "Daļēji mākoņains", w_pouring: "Stiprs lietus", w_rainy: "Lietus", w_snowy: "Sniegs", w_snowy_rainy: "Slapjš sniegs", w_sunny: "Saulains", w_windy: "Vējains", w_windy_variant: "Vējains",
   solar: "Saule", solar_station: "Saules stacija", solar_inverter: "Saules invertors", production: "Ražošana", battery: "Baterija", house: "Māja", to_grid: "Uz tīklu", from_grid: "No tīkla", today: "Šodien", this_month: "Šomēnes", charging: "Uzlāde", discharging: "Izlāde", peak_power: "Maksimums", kw: "kW", kwh: "kWh",
   ui_settings: "Saskarnes iestatījumi", language: "Valoda", theme: "Tēma", light: "Gaišā", dark: "Tumšā", accent_color: "Akcenta krāsa", button_size: "Pogu izmērs", font_size: "Fonta izmērs", compact: "Kompaktais režīms", reset: "Atiestatīt", applies_to_all: "Attiecas uz visām AlpicAir kartēm šajā pārlūkā", current: "Pašlaik", target: "Uzstādīts", boiler: "Boileris",
   recuperator: "Rekuperators", recuperator_panel: "Rekuperatora panelis", air_conditioner: "Kondicionieris", heat_pump: "Siltumsūknis",
-  sensors: "Temperatūras", device_settings: "Ierīces iestatījumi", settings: "Iestatījumi", back: "Atpakaļ", menu: "Izvēlne", weather: "Laikapstākļi",
+  sensors: "Temperatūras", device_settings: "Ierīces iestatījumi", settings: "Iestatījumi", back: "Atpakaļ", menu: "Izvēlne", weather: "Laikapstākļi", custom: "Sava poga",
   recuperation: "Rekuperācija", fan_speed: "Ventilatora ātrums", supply: "Pieplūde", exhaust: "Nosūce",
   off: "Izslēgts", on: "Ieslēgts", building_protection: "Ēkas aizsardzība", economy: "Ekonomiskais",
   comfort: "Normālais", boost: "Boost", outdoor: "Ārā", indoor: "Iekštelpās",

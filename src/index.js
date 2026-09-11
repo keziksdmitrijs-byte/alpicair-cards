@@ -10,7 +10,7 @@ import "./cards/device-settings-card.js";
 import "./cards/ui-settings-card.js";
 import "./cards/solar-card.js";
 
-const VERSION = "1.4.0";
+const VERSION = "1.5.0";
 
 window.customCards = window.customCards || [];
 const register = (type, name, description) => {

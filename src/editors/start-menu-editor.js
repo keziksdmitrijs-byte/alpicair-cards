@@ -15,10 +15,19 @@ class StartMenuEditor extends BaseCardEditor {
     show_recuperator: "Show recuperator button",
     show_air_conditioner: "Show air conditioner button",
     show_heat_pump: "Show heat pump button",
+    show_solar: "Show solar station button",
+    show_custom: "Show custom button",
+    show_menu: "Show menu button",
+    custom_name: "Custom button name",
+    custom_icon: "Custom button icon",
+    columns: "Buttons per row",
     recuperator_action: "Recuperator button action",
     air_conditioner_action: "Air conditioner button action",
     heat_pump_action: "Heat pump button action",
+    solar_action: "Solar station button action",
+    custom_action: "Custom button action",
     menu_action: "Menu button action",
+
     button_scale: "Button size (1 = default)",
     font_scale: "Font size (1 = default)",
   };
@@ -41,11 +50,28 @@ class StartMenuEditor extends BaseCardEditor {
       { name: "time_offset", selector: { number: { min: -720, max: 720, step: 1, mode: "box" } } },
       entityField("time_entity", ["sensor", "input_datetime"]),
       boolRow(["show_recuperator", "show_air_conditioner", "show_heat_pump"]),
+      boolRow(["show_solar", "show_custom", "show_menu"]),
+      { type: "grid", name: "", schema: [
+        { name: "custom_name", selector: { text: {} } },
+        { name: "custom_icon", selector: { icon: {} } },
+      ] },
+      {
+        name: "columns",
+        selector: { select: { mode: "dropdown", options: [
+          { value: "auto", label: "Auto (2 rows)" },
+          { value: "1", label: "1" },
+          { value: "2", label: "2" },
+          { value: "3", label: "3" },
+        ] } },
+      },
       { name: "recuperator_action", selector: { ui_action: {} } },
       { name: "air_conditioner_action", selector: { ui_action: {} } },
       { name: "heat_pump_action", selector: { ui_action: {} } },
+      { name: "solar_action", selector: { ui_action: {} } },
+      { name: "custom_action", selector: { ui_action: {} } },
       { name: "menu_action", selector: { ui_action: {} } },
       sizeFields,
+
     ];
   }
 }
