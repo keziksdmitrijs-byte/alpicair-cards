@@ -18,6 +18,7 @@ class StartMenuEditor extends BaseCardEditor {
     show_solar: "Show solar station button",
     show_custom: "Show custom button",
     show_menu: "Show menu button",
+    show_labels: "Show button names",
     custom_name: "Custom button name",
     custom_icon: "Custom button icon",
     columns: "Buttons per row",
@@ -51,6 +52,7 @@ class StartMenuEditor extends BaseCardEditor {
       entityField("time_entity", ["sensor", "input_datetime"]),
       boolRow(["show_recuperator", "show_air_conditioner", "show_heat_pump"]),
       boolRow(["show_solar", "show_custom", "show_menu"]),
+      boolRow(["show_labels"]),
       { type: "grid", name: "", schema: [
         { name: "custom_name", selector: { text: {} } },
         { name: "custom_icon", selector: { icon: {} } },

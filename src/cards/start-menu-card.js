@@ -61,6 +61,7 @@ export class AlpicairStartMenuCard extends UiSettingsMixin(LitElement) {
       show_solar: true,
       show_custom: false,
       show_menu: true,
+      show_labels: true,
       custom_name: "",
       custom_icon: "mdi:star-outline",
       columns: "auto",
@@ -142,9 +143,7 @@ export class AlpicairStartMenuCard extends UiSettingsMixin(LitElement) {
         : weather.state
       : this._t("weather");
     const visibleItems = MENU_ITEMS.filter((item) => this._config[item.show] !== false);
-    const cols = this._config.columns && this._config.columns !== "auto"
-      ? Number(this._config.columns)
-      : Math.max(1, Math.ceil(visibleItems.length / 2));
+    const iconsOnly = this._config.show_labels === false;
 
     return html`<ha-card class="start-menu-card">
       <div class="start-top">
@@ -164,13 +163,26 @@ export class AlpicairStartMenuCard extends UiSettingsMixin(LitElement) {
           : nothing}
       </div>
 
-      <div class="start-actions" style=${`grid-template-columns:repeat(${cols}, minmax(0, 1fr))`}>
-        ${visibleItems.map((item) => html`
-          <button class="start-action ${item.accent ? "menu" : ""}" @click=${() => this._act(this._config[item.action])}>
-            <ha-icon icon=${(item.iconKey && this._config[item.iconKey]) || item.icon}></ha-icon>
-            <span>${(item.nameKey && this._config[item.nameKey]) || this._t(item.id)}</span>
-            <ha-icon class="start-chevron" icon="mdi:chevron-right"></ha-icon>
-          </button>`)}
+      <div class="start-actions ${iconsOnly ? "icons-only" : ""}">
+        ${(() => {
+          const perRow = this._config.columns && this._config.columns !== "auto"
+            ? Number(this._config.columns)
+            : Math.max(1, Math.ceil(visibleItems.length / 2));
+          const rows = [];
+          for (let i = 0; i < visibleItems.length; i += perRow) rows.push(visibleItems.slice(i, i + perRow));
+          return rows.map((row) => html`
+            <div class="start-row">
+              ${row.map((item) => html`
+                <button class="start-action ${item.accent ? "menu" : ""} ${iconsOnly ? "icon-only" : ""}"
+                  style=${`flex:0 0 calc(${(100 / row.length).toFixed(4)}% - var(--alpic-gap, 8px) * ${(row.length - 1) / row.length})`}
+                  @click=${() => this._act(this._config[item.action])}>
+                  <ha-icon icon=${(item.iconKey && this._config[item.iconKey]) || item.icon}></ha-icon>
+                  ${iconsOnly ? nothing : html`
+                    <span>${(item.nameKey && this._config[item.nameKey]) || this._t(item.id)}</span>
+                    <ha-icon class="start-chevron" icon="mdi:chevron-right"></ha-icon>`}
+                </button>`)}
+            </div>`);
+        })()}
       </div>
 
     </ha-card>`;

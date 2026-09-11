@@ -437,8 +437,11 @@ export const cardStyles = css`
   .start-weather ha-icon { grid-row: 1 / span 2; color: var(--primary-color); --mdc-icon-size: calc(34px * var(--alp-bs, 1)); }
   .start-weather-temp { font-size: calc(22px * var(--alp-fs, 1)); line-height: 1; font-weight: 800; font-variant-numeric: tabular-nums; }
   .start-weather-state { max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: calc(11px * var(--alp-fs, 1)); font-weight: 600; color: var(--secondary-text-color); }
-  .start-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .start-actions { display: flex; flex-direction: column; gap: 8px; }
+  .start-row { display: flex; gap: var(--alpic-gap, 8px); width: 100%; }
   .start-action { min-height: calc(64px * var(--alp-bs, 1)); min-width: 0; border: 1px solid var(--divider-color); border-radius: 12px; padding: 10px 10px; cursor: pointer; background: var(--secondary-background-color); color: var(--primary-text-color); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 8px; text-align: left; font: inherit; font-size: calc(13px * var(--alp-fs, 1)); font-weight: 700; }
+  .start-action.icon-only { display: flex; align-items: center; justify-content: center; }
+  .start-action.icon-only > ha-icon:first-child { --mdc-icon-size: calc(28px * var(--alp-bs, 1)); }
   .start-action:active { transform: scale(.98); }
   .start-action > ha-icon:first-child { color: var(--primary-color); --mdc-icon-size: calc(24px * var(--alp-bs, 1)); }
   .start-action span { min-width: 0; overflow-wrap: anywhere; }
@@ -448,7 +451,6 @@ export const cardStyles = css`
   @media (max-width: 360px) {
     .start-top { align-items: flex-start; flex-direction: column; }
     .start-weather { width: 100%; box-sizing: border-box; }
-    .start-actions { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
   }
 
   /* --- solar inverter card --- */
